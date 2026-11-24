@@ -1,0 +1,1 @@
+CREATE DATABASE disquete_db;
