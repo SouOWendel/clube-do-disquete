@@ -1,0 +1,19 @@
+<section class="bevel-out flex flex-col bg-win-gray p-[3px] font-win text-sm">
+  <!-- Barra de título -->
+  <header class="flex h-6 items-center justify-between bg-win-title pr-0.5 pl-2 font-bold text-white">
+    <span>Draw</span>
+    <button
+      type="button"
+      class="bevel-out flex h-[18px] w-5 items-center justify-center bg-win-gray text-xs leading-none font-bold text-black active:bevel-pressed"
+      aria-label="Fechar"
+      (click)="closed.emit()"
+    >
+      ✕
+    </button>
+  </header>
+
+  <!-- Área de desenho -->
+  <div class="bevel-in mt-1 p-0.5">
+    <canvas width="480" height="320" class="block bg-white"></canvas>
+  </div>
+</section>
