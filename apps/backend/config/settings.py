@@ -21,7 +21,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'core',
     'usuarios',
-    'topicos'
+    'topicos',
+    'respostas'
 ]
 
 # registra os middlewares de seguranca, cors e processamento comum das requisicoes
