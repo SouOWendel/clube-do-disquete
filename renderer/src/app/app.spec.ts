@@ -8,18 +8,24 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it('cria o app', () => {
     const fixture = TestBed.createComponent(App);
-    const app = fixture.componentInstance;
-    expect(app).toBeTruthy();
+    expect(fixture.componentInstance).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('abre e fecha a janela Draw pela barra de tarefas', async () => {
     const fixture = TestBed.createComponent(App);
+    const el = fixture.nativeElement as HTMLElement;
     await fixture.whenStable();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(
-      'Hello, renderer',
-    );
+
+    expect(el.querySelector('app-draw-window')).toBeNull();
+
+    el.querySelector<HTMLButtonElement>('app-taskbar button')!.click();
+    await fixture.whenStable();
+    expect(el.querySelector('app-draw-window')).not.toBeNull();
+
+    el.querySelector<HTMLButtonElement>('[aria-label="Fechar"]')!.click();
+    await fixture.whenStable();
+    expect(el.querySelector('app-draw-window')).toBeNull();
   });
 });
