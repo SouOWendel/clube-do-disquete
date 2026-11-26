@@ -22,7 +22,7 @@ INSERT INTO categorias (codigo, nome)
 VALUES
     ('precos-e-promocoes', 'Preços e promoções'),
     ('combos-cpu-gpu', 'Combos CPU + GPU'),
-    ('montagem-eupgrade', 'Montagem e upgrade'),
+    ('montagem-e-upgrade', 'Montagem e upgrade'),
     ('conserto-e-diagnostico', 'Conserto e diagnóstico'),
     ('placas-de-video', 'Placas de vídeo'),
     ('processadores', 'Processadores');

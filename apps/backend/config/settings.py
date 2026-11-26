@@ -20,7 +20,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'core',
-    'usuarios'
+    'usuarios',
+    'topicos'
 ]
 
 # registra os middlewares de seguranca, cors e processamento comum das requisicoes
@@ -90,7 +91,7 @@ EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.Em
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@clubedodisquete.local')
 FRONTEND_RESET_PASSWORD_URL = os.getenv(
     'FRONTEND_RESET_PASSWORD_URL',
-    'http://localhost:4200/redefinir-senha',
+    'http://localhost:4200/redefinir-senha'
 )
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
