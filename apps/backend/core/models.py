@@ -1,7 +1,7 @@
 from django.db import models
 
 
-# mapeia a tabela usuarios sem gerenciar sua estrutura (sem migrations), refletindo os campos de credencial local, acesso via Google e aceite obrigatorio dos termos
+# mapeia a tabela Usuario sem gerenciar sua estrutura (sem migrations), refletindo os campos de credencial local, acesso via Google e aceite obrigatorio dos termos
 class Usuario(models.Model):
     id_usuario = models.BigAutoField(primary_key=True)
     email = models.CharField(max_length=255, unique=True)
@@ -10,6 +10,16 @@ class Usuario(models.Model):
     identificador_google = models.CharField(max_length=255, unique=True, null=True, blank=True)
     termos_aceitos = models.BooleanField()
     criado_em = models.DateTimeField(auto_now_add=True)
+
+    # retorna verdadeiro para permitir que as permissoes nativas do drf reconhecam o usuario autenticado via jwt
+    @property
+    def is_authenticated(self):
+        return True
+
+    # retorna falso pois esta instancia representa um usuario autenticado na base
+    @property
+    def is_anonymous(self):
+        return False
 
     class Meta:
         managed = False
@@ -34,13 +44,13 @@ class Topico(models.Model):
         Usuario,
         on_delete=models.RESTRICT,
         db_column='id_autor',
-        related_name='topicos',
+        related_name='topicos'
     )
     categoria = models.ForeignKey(
         Categoria,
         on_delete=models.RESTRICT,
         db_column='id_categoria',
-        related_name='topicos',
+        related_name='topicos'
     )
     titulo = models.CharField(max_length=140)
     corpo = models.TextField()
@@ -59,13 +69,13 @@ class Resposta(models.Model):
         Topico,
         on_delete=models.CASCADE,
         db_column='id_topico',
-        related_name='respostas',
+        related_name='respostas'
     )
     autor = models.ForeignKey(
         Usuario,
         on_delete=models.RESTRICT,
         db_column='id_autor',
-        related_name='respostas',
+        related_name='respostas'
     )
     corpo = models.CharField(max_length=10000)
     criado_em = models.DateTimeField(auto_now_add=True)

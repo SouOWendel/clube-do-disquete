@@ -21,27 +21,22 @@ O **Clube do Disquete** é um fórum de discussão desktop voltado para hardware
 
 ## Estrutura do Projeto
 
-## Estrutura do Projeto
-
 ```text
 clube-do-disquete/
 ├── apps/
 │   └── backend/
-│       ├── config/                  # configuracoes centrais do Django, drf, cors e jwt
-│       │   ├── settings.py          # configuracao do banco PostgreSQL, aplicativos, cors e parametros jwt
-│       │   └── urls.py              # roteamento principal da api sob o prefixo api
-│       ├── core/                    # nucleo de dominio e mapeamento das tabelas do banco
-│       │   ├── __init__.py          # marca o diretorio core como pacote Python
-│       │   ├── models.py            # mapeamento das tabelas sem geracao de migrations
-│       │   ├── urls.py              # registro das rotas do aplicativo core
-│       │   └── views.py             # endpoint de verificacao de saude da api e conexao com o banco
-│       ├── manage.py                # utilitario administrativo do Django
-│       └── requirements.txt         # dependencias Python do backend
+│       ├── config/                  # Configurações centrais do Django, DRF, CORS, JWT e e-mail
+│       ├── core/                    # Models mapeados (managed = False), autenticação JWT e rotas base
+│       ├── usuarios/                # Fluxos de cadastro, login JWT, Google e recuperação de senha
+│       ├── .env.example             # Modelo de variáveis de ambiente da API
+│       ├── manage.py                # Utilitário CLI do Django
+│       └── requirements.txt         # Dependências Python do backend
 ├── database/
-│   ├── 001_create_database.sql      # criacao do banco de dados disquete_db
-│   └── 002_create_schema.sql        # criacao das tabelas, chaves, restricoes e categorias iniciais
+│   ├── 001_create_database.sql      # Criação do banco de dados disquete_db
+│   └── 002_create_schema.sql        # Criação das tabelas, chaves, restrições e categorias iniciais
 ├── docs/
-│   ├── database.md                  # documentacao geral da modelagem e funcionamento do banco
-│   └── django-setup.md              # documentacao de arquitetura e execucao do backend Django
-└── README.md                        # visao geral do projeto e estrutura de diretorios
-```
+│   ├── auth-usuario.md             # Documentação dos endpoints e fluxos de autenticação
+│   ├── database.md                  # Documentação geral da modelagem e funcionamento do banco
+│   └── django-setup.md              # Documentação de arquitetura e execução do backend Django
+├── .gitignore                       # Regras do Git para ignorar arquivos locais e temporários
+└── README.md                        # Visão geral do projeto e estrutura de diretórios

@@ -20,13 +20,14 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'core',
+    'usuarios'
 ]
 
 # registra os middlewares de seguranca, cors e processamento comum das requisicoes
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -41,7 +42,7 @@ DATABASES = {
         'USER': os.getenv('DB_USER', 'postgres'),
         'PASSWORD': os.getenv('DB_PASSWORD', 'postgres'),
         'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': os.getenv('DB_PORT', '5432'),
+        'PORT': os.getenv('DB_PORT', '5432')
     }
 }
 
@@ -61,7 +62,7 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_ALL_ORIGINS = DEBUG
 
-# configura a api rest para operar exclusivamente com json e sem autenticacao por sessao
+# configura a api rest para operar exclusivamente com json e autenticar requisicoes via cabecalho bearer jwt
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -69,10 +70,30 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
-    'UNAUTHENTICATED_USER': None,
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'core.authentication.JWTAuthentication',
+    ],
+    'UNAUTHENTICATED_USER': None
 }
 
-# define os parametros usados na geracao e validacao dos tokens jwt conforme a especificacao
+# define os parametros usados na geracao e validacao dos tokens jwt de acesso e de recuperacao de senha
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
 JWT_ALGORITHM = 'HS256'
 JWT_ACCESS_EXPIRES_MINUTES = int(os.getenv('JWT_ACCESS_EXPIRES_MINUTES', '1440'))
+JWT_RESET_EXPIRES_MINUTES = int(os.getenv('JWT_RESET_EXPIRES_MINUTES', '30'))
+
+# define o identificador publico do aplicativo Google para validacao do login social
+GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
+
+# configura o servico de envio de emails e o endereco de destino no frontend para redefinicao de senha
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@clubedodisquete.local')
+FRONTEND_RESET_PASSWORD_URL = os.getenv(
+    'FRONTEND_RESET_PASSWORD_URL',
+    'http://localhost:4200/redefinir-senha',
+)
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True').lower() == 'true'
