@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* Paleta do Windows 95 */
 @theme {
@@ -6,7 +6,7 @@
   --color-win-dark: #808080;
   --color-win-wallpaper: #00a8a8;
   --color-win-title: #000080;
-  --font-win: Tahoma, "MS Sans Serif", Arial, sans-serif;
+  --font-win: Tahoma, 'MS Sans Serif', Arial, sans-serif;
 }
 
 /* Borda em relevo (botão solto, barra de tarefas, janelas) */
