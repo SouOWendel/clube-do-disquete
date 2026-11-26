@@ -1,0 +1,1 @@
+# marca o diretorio topicos como um pacote Python que concentra as rotas e regras de categorias e topicos
