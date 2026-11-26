@@ -32,6 +32,8 @@ clube-do-disquete/
 ├── backend/
 │   ├── config/                      # Configurações centrais do Django, DRF, CORS, JWT e e-mail
 │   ├── core/                        # Models mapeados (managed = False), autenticação JWT e rotas base
+│   ├── respostas/                   # Listagem, criação e exclusão de respostas dos tópicos
+│   ├── topicos/                     # Listagem de categorias e operações de feed e tópicos
 │   ├── usuarios/                    # Fluxos de cadastro, login JWT, Google e recuperação de senha
 │   ├── .env.example                 # Modelo de variáveis de ambiente da API
 │   ├── manage.py                    # Utilitário CLI do Django
@@ -40,7 +42,8 @@ clube-do-disquete/
 │   ├── 001_create_database.sql      # Criação do banco de dados disquete_db
 │   └── 002_create_schema.sql        # Criação das tabelas, chaves, restrições e categorias iniciais
 ├── docs/
-│   ├── auth-usuario.md             # Documentação dos endpoints e fluxos de autenticação
+│   ├── auth-usuario.md              # Documentação dos endpoints e fluxos de autenticação
+│   ├── categoria-topico.md          # Documentação dos endpoints de categorias, feed e tópicos
 │   ├── database.md                  # Documentação geral da modelagem e funcionamento do banco
 │   └── django-setup.md              # Documentação de arquitetura e execução do backend Django
 ├── .gitignore                       # Regras do Git para ignorar arquivos locais e temporários
@@ -58,3 +61,8 @@ clube-do-disquete/
   npm install   # também instala as dependências do Angular em renderer/
   npm start     # sobe o Angular (porta 4200) e abre o Electron
   ```
+
+## Documentação
+
+- **Autenticação e Usuários:** contratos das rotas de conta e sessão em [docs/auth-usuario.md](docs/auth-usuario.md).
+- **Categorias, Feed e Tópicos:** endpoints de categorias, listagem do feed e CRUD de tópicos em [docs/categoria-topico.md](docs/categoria-topico.md).

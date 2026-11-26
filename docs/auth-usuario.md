@@ -34,7 +34,7 @@ O módulo de autenticação do **Clube do Disquete** está implementado no aplic
    ```
 4. Em outro terminal PowerShell, crie um usuário de teste via `POST /api/auth/cadastro/`:
    ```powershell
-   Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/cadastro/" -Method Post -ContentType "application/json" -Body '{"email":"teste@disquete.com","nome_usuario":"usuario_teste","senha":"senha123","termos_aceitos":true}'
+   Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/cadastro/" -Method Post -ContentType "application/json" -Body '{"email":"teste@disquete.com","nome_usuario":"usuario_teste","senha":"senha123","confirmacao_senha":"senha123","termos_aceitos":true}'
    ```
 5. Faça login via `POST /api/auth/login/` e armazene a resposta na variável `$res` (evitando que o PowerShell corte o token com `...` na exibição do terminal):
    ```powershell
@@ -50,7 +50,7 @@ O módulo de autenticação do **Clube do Disquete** está implementado no aplic
    ```
    Em seguida, envie `$rec.token_recuperacao` para `POST /api/auth/redefinir-senha/`:
    ```powershell
-   $bodyReset = @{ token = $rec.token_recuperacao; nova_senha = "nova_senha123" } | ConvertTo-Json
+   $bodyReset = @{ token = $rec.token_recuperacao; nova_senha = "nova_senha123"; confirmacao_senha = "nova_senha123" } | ConvertTo-Json
    Invoke-RestMethod -Uri "http://127.0.0.1:8000/api/auth/redefinir-senha/" -Method Post -ContentType "application/json" -Body $bodyReset
    ```
 8. Teste o encerramento de sessão em `POST /api/auth/logout/`:
