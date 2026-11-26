@@ -23,14 +23,19 @@ O **Clube do Disquete** é um fórum de discussão desktop voltado para hardware
 
 ```text
 clube-do-disquete/
-├── apps/
-│   └── backend/
-│       ├── config/                  # Configurações centrais do Django, DRF, CORS, JWT e e-mail
-│       ├── core/                    # Models mapeados (managed = False), autenticação JWT e rotas base
-│       ├── usuarios/                # Fluxos de cadastro, login JWT, Google e recuperação de senha
-│       ├── .env.example             # Modelo de variáveis de ambiente da API
-│       ├── manage.py                # Utilitário CLI do Django
-│       └── requirements.txt         # Dependências Python do backend
+├── frontend/                        # App desktop: Electron + Angular
+│   ├── src/main.ts                  # Processo principal do Electron (janela e carregamento da interface)
+│   ├── renderer/                    # Interface em Angular + Tailwind
+│   ├── forge.config.mts             # Empacotamento e instaladores (Electron Forge)
+│   ├── vite.main.config.mts         # Build do processo principal (Vite)
+│   └── package.json                 # Scripts de desenvolvimento, lint e empacotamento
+├── backend/
+│   ├── config/                      # Configurações centrais do Django, DRF, CORS, JWT e e-mail
+│   ├── core/                        # Models mapeados (managed = False), autenticação JWT e rotas base
+│   ├── usuarios/                    # Fluxos de cadastro, login JWT, Google e recuperação de senha
+│   ├── .env.example                 # Modelo de variáveis de ambiente da API
+│   ├── manage.py                    # Utilitário CLI do Django
+│   └── requirements.txt             # Dependências Python do backend
 ├── database/
 │   ├── 001_create_database.sql      # Criação do banco de dados disquete_db
 │   └── 002_create_schema.sql        # Criação das tabelas, chaves, restrições e categorias iniciais
@@ -41,3 +46,15 @@ clube-do-disquete/
 ├── .gitignore                       # Regras do Git para ignorar arquivos locais e temporários
 └── README.md                        # Visão geral do projeto e estrutura de diretórios
 ```
+
+## Como Rodar
+
+- **Banco de dados:** execute os scripts de `database/` na ordem (veja [docs/database.md](docs/database.md)).
+- **Backend:** dentro de `backend/`, siga [docs/django-setup.md](docs/django-setup.md).
+- **Frontend (desktop):**
+
+  ```bash
+  cd frontend
+  npm install   # também instala as dependências do Angular em renderer/
+  npm start     # sobe o Angular (porta 4200) e abre o Electron
+  ```

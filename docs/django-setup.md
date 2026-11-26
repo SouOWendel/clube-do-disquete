@@ -20,9 +20,9 @@ O backend do **Clube do Disquete** é uma API REST _stateless_ desenvolvida em *
 ## Como Executar Localmente
 
 1. Certifique-se de que o banco `disquete_db` já foi criado e populado com os scripts da pasta `database/`.
-2. Acesse a pasta `apps/backend/`, crie e ative um ambiente virtual:
+2. Acesse a pasta `backend/`, crie e ative um ambiente virtual:
    ```bash
-   cd apps/backend
+   cd backend
    python -m venv .venv
    # Linux/macOS:
    source .venv/bin/activate

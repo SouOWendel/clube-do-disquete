@@ -1,6 +1,6 @@
 # Autenticação e Gerenciamento de Usuários
 
-O módulo de autenticação do **Clube do Disquete** está implementado no aplicativo `usuarios` (`apps/backend/usuarios/`) com autenticação global via `core/authentication.py` (`JWTAuthentication`).
+O módulo de autenticação do **Clube do Disquete** está implementado no aplicativo `usuarios` (`backend/usuarios/`) com autenticação global via `core/authentication.py` (`JWTAuthentication`).
 
 ## Regras de Negócio Aplicadas
 
@@ -23,7 +23,7 @@ O módulo de autenticação do **Clube do Disquete** está implementado no aplic
 
 ## Como Testar Localmente (Windows PowerShell)
 
-1. Com o ambiente virtual ativado dentro de `apps/backend/`, instale as novas dependências:
+1. Com o ambiente virtual ativado dentro de `backend/`, instale as novas dependências:
    ```powershell
    pip install -r requirements.txt
    ```
