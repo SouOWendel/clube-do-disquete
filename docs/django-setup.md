@@ -1,21 +1,21 @@
 # Setup e Arquitetura do Backend (Django)
 
-O backend do **Clube do Disquete** é uma API REST *stateless* desenvolvida em **Django** com **Django REST Framework (DRF)**, conectada ao banco PostgreSQL `disquete_db`.
+O backend do **Clube do Disquete** é uma API REST _stateless_ desenvolvida em **Django** com **Django REST Framework (DRF)**, conectada ao banco PostgreSQL `disquete_db`.
 
 ## Decisões de Arquitetura
 
-* **Abordagem *Database-First* (`managed = False`):** Como a estrutura das tabelas é controlada manualmente pelos scripts da pasta `database/`, todos os models do Django possuem `managed = False`. O ORM executa apenas operações de manipulação de dados (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) e não gera nem aplica migrations.
-* **Apps Nativos Enxutos:** Os módulos padrão de sessão, painel administrativo e autenticação baseada em cookies (`django.contrib.admin`, `django.contrib.auth`, `django.contrib.sessions`, `django.contrib.messages`) foram removidos do `INSTALLED_APPS`. Isso evita a criação de tabelas internas do framework dentro do `disquete_db` e mantém a API totalmente orientada a tokens JWT.
-* **CORS:** Configurado via `django-cors-headers` para permitir requisições originadas do cliente desktop (Angular + Electron).
+- **Abordagem _Database-First_ (`managed = False`):** Como a estrutura das tabelas é controlada manualmente pelos scripts da pasta `database/`, todos os models do Django possuem `managed = False`. O ORM executa apenas operações de manipulação de dados (`SELECT`, `INSERT`, `UPDATE`, `DELETE`) e não gera nem aplica migrations.
+- **Apps Nativos Enxutos:** Os módulos padrão de sessão, painel administrativo e autenticação baseada em cookies (`django.contrib.admin`, `django.contrib.auth`, `django.contrib.sessions`, `django.contrib.messages`) foram removidos do `INSTALLED_APPS`. Isso evita a criação de tabelas internas do framework dentro do `disquete_db` e mantém a API totalmente orientada a tokens JWT.
+- **CORS:** Configurado via `django-cors-headers` para permitir requisições originadas do cliente desktop (Angular + Electron).
 
 ## Mapeamento dos Models (`core/models.py`)
 
-| Model | Tabela no PostgreSQL | Observações |
-|---|---|---|
-| `Usuario` | `usuarios` | Mapeia credenciais locais (`hash_senha`) e sociais (`identificador_google`), além de `termos_aceitos`. |
-| `Categoria` | `categorias` | Mapeia as seis categorias temáticas fixas do fórum. |
-| `Topico` | `topicos` | Relaciona autor e categoria (`ON DELETE RESTRICT`) e atualiza `atualizado_em` automaticamente via `auto_now=True`. |
-| `Resposta` | `respostas` | Relaciona tópico (`ON DELETE CASCADE`) e autor (`ON DELETE RESTRICT`), respeitando o limite de 10.000 caracteres. |
+| Model       | Tabela no PostgreSQL | Observações                                                                                                        |
+| ----------- | -------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `Usuario`   | `usuarios`           | Mapeia credenciais locais (`hash_senha`) e sociais (`identificador_google`), além de `termos_aceitos`.             |
+| `Categoria` | `categorias`         | Mapeia as seis categorias temáticas fixas do fórum.                                                                |
+| `Topico`    | `topicos`            | Relaciona autor e categoria (`ON DELETE RESTRICT`) e atualiza `atualizado_em` automaticamente via `auto_now=True`. |
+| `Resposta`  | `respostas`          | Relaciona tópico (`ON DELETE CASCADE`) e autor (`ON DELETE RESTRICT`), respeitando o limite de 10.000 caracteres.  |
 
 ## Como Executar Localmente
 
@@ -44,7 +44,7 @@ O backend do **Clube do Disquete** é uma API REST *stateless* desenvolvida em *
 
 ## Como Testar e Resultado Esperado
 
-Com o servidor em execução (`http://127.0.0.1:8000`), faça uma requisição `GET` para o endpoint de *healthcheck* diretamente pelo navegador ou via terminal:
+Com o servidor em execução (`http://127.0.0.1:8000`), faça uma requisição `GET` para o endpoint de _healthcheck_ diretamente pelo navegador ou via terminal:
 
 ```bash
 curl -i [http://127.0.0.1:8000/api/health/](http://127.0.0.1:8000/api/health/)
@@ -56,9 +56,9 @@ A API deve responder com status **HTTP `200 OK`** e o seguinte corpo JSON, confi
 
 ```json
 {
-    "status": "ok",
-    "database": "connected",
-    "categorias_carregadas": 6
+  "status": "ok",
+  "database": "connected",
+  "categorias_carregadas": 6
 }
 ```
 
@@ -68,8 +68,8 @@ Caso o serviço do PostgreSQL esteja parado ou alguma credencial no `.env` (`DB_
 
 ```json
 {
-    "status": "error",
-    "database": "disconnected",
-    "detail": "mensagem de erro retornada pelo PostgreSQL"
+  "status": "error",
+  "database": "disconnected",
+  "detail": "mensagem de erro retornada pelo PostgreSQL"
 }
 ```
