@@ -3,7 +3,7 @@
   "productName": "clube-do-disquete",
   "version": "1.0.0",
   "private": true,
-  "description": "My Electron application description",
+  "description": "Fórum desktop retrô sobre hardware e tecnologia",
   "keywords": [],
   "license": "MIT",
   "author": {
@@ -15,7 +15,6 @@
     "start": "concurrently -k -n angular,electron -c magenta,cyan \"npm --prefix renderer start\" \"wait-on tcp:localhost:4200 && electron-forge start\"",
     "package": "npm run build:renderer && electron-forge package",
     "make": "npm run build:renderer && electron-forge make",
-    "release": "electron-forge release",
     "lint": "oxlint && oxfmt --check",
     "lint:fix": "oxlint --fix && oxfmt --write",
     "typecheck": "tsc --noEmit",
