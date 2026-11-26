@@ -1,0 +1,1 @@
+# marca o diretorio core como um pacote Python que concentra os modelos e rotas principais da api
