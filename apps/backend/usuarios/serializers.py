@@ -1,0 +1,143 @@
+import re
+from django.contrib.auth.hashers import make_password
+from rest_framework import serializers
+from core.models import Usuario
+
+
+# serializa os dados publicos do perfil do usuario autenticado sem expor credenciais sensiveis
+class UsuarioPerfilSerializer(serializers.ModelSerializer):
+    possui_senha = serializers.SerializerMethodField()
+    google_vinculado = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Usuario
+        fields = [
+            'id_usuario',
+            'email',
+            'nome_usuario',
+            'termos_aceitos',
+            'possui_senha',
+            'google_vinculado',
+            'criado_em'
+        ]
+
+    def get_possui_senha(self, obj: Usuario) -> bool:
+        return bool(obj.hash_senha)
+
+    def get_google_vinculado(self, obj: Usuario) -> bool:
+        return bool(obj.identificador_google)
+
+
+# valida os dados de cadastro tradicional, confere a confirmacao de senha e cria o novo usuario com senha criptografada e aceite obrigatorio dos termos
+class CadastroSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255)
+    nome_usuario = serializers.CharField(min_length=3, max_length=150)
+    senha = serializers.CharField(min_length=8, max_length=128, write_only=True)
+    confirmacao_senha = serializers.CharField(min_length=8, max_length=128, write_only=True)
+    termos_aceitos = serializers.BooleanField()
+
+    # normaliza o email e garante unicidade sem distincao entre maiusculas e minusculas
+    def validate_email(self, value: str) -> str:
+        email_normalizado = value.strip().lower()
+        if Usuario.objects.filter(email__iexact=email_normalizado).exists():
+            raise serializers.ValidationError('Já existe uma conta cadastrada com este e-mail.')
+        return email_normalizado
+
+    # valida o formato e garante unicidade do nome de usuario sem distincao entre maiusculas e minusculas
+    def validate_nome_usuario(self, value: str) -> str:
+        nome_limpo = value.strip()
+        if not re.match(r'^[a-zA-Z0-9_.-]+$', nome_limpo):
+            raise serializers.ValidationError(
+                'O nome de usuário deve conter apenas letras, números, ponto, hífen ou sublinhado.'
+            )
+        if Usuario.objects.filter(nome_usuario__iexact=nome_limpo).exists():
+            raise serializers.ValidationError('Este nome de usuário já está em uso.')
+        return nome_limpo
+
+    # exige o aceite explicito dos termos de uso conforme a regra de negocio
+    def validate_termos_aceitos(self, value: bool) -> bool:
+        if value is not True:
+            raise serializers.ValidationError('O aceite dos termos de uso é obrigatório.')
+        return True
+
+    # garante que os campos senha e confirmacao de senha sejam identicos conforme a regra de negocio
+    def validate(self, attrs: dict) -> dict:
+        if attrs['senha'] != attrs['confirmacao_senha']:
+            raise serializers.ValidationError(
+                {'confirmacao_senha': 'A confirmação de senha deve ser idêntica à senha informada.'}
+            )
+        return attrs
+
+    def create(self, validated_data: dict) -> Usuario:
+        return Usuario.objects.create(
+            email=validated_data['email'],
+            nome_usuario=validated_data['nome_usuario'],
+            hash_senha=make_password(validated_data['senha']),
+            termos_aceitos=True
+        )
+
+
+# valida os dados de entrada do login tradicional por email e senha
+class LoginSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255)
+    senha = serializers.CharField(write_only=True)
+
+    def validate_email(self, value: str) -> str:
+        return value.strip().lower()
+
+
+# valida os dados de entrada do acesso social com Google, aceitando tanto id_token quanto credential
+class LoginGoogleSerializer(serializers.Serializer):
+    id_token = serializers.CharField(required=False, allow_blank=False)
+    credential = serializers.CharField(required=False, allow_blank=False)
+    termos_aceitos = serializers.BooleanField(required=False, default=False)
+    nome_usuario = serializers.CharField(required=False, allow_blank=True, min_length=3, max_length=150)
+
+    def validate_nome_usuario(self, value: str) -> str:
+        nome_limpo = value.strip()
+        if not nome_limpo:
+            return ''
+        if not re.match(r'^[a-zA-Z0-9_.-]+$', nome_limpo):
+            raise serializers.ValidationError(
+                'O nome de usuário deve conter apenas letras, números, ponto, hífen ou sublinhado.'
+            )
+        if Usuario.objects.filter(nome_usuario__iexact=nome_limpo).exists():
+            raise serializers.ValidationError('Este nome de usuário já está em uso.')
+        return nome_limpo
+
+    def validate(self, attrs: dict) -> dict:
+        token_google = attrs.get('id_token') or attrs.get('credential')
+        if not token_google:
+            raise serializers.ValidationError(
+                {'id_token': 'Informe o token de identidade retornado pelo Google.'}
+            )
+        attrs['token_google'] = token_google
+        return attrs
+
+
+# valida o email informado para iniciar o fluxo de recuperacao de senha
+class RecuperarSenhaSerializer(serializers.Serializer):
+    email = serializers.EmailField(max_length=255)
+
+    def validate_email(self, value: str) -> str:
+        return value.strip().lower()
+
+
+# valida o token temporario e a nova senha minima de 8 caracteres para redefinicao
+class RedefinirSenhaSerializer(serializers.Serializer):
+    token = serializers.CharField()
+    nova_senha = serializers.CharField(min_length=8, max_length=128, write_only=True)
+    confirmacao_senha = serializers.CharField(
+        min_length=8,
+        max_length=128,
+        write_only=True,
+        required=False
+    )
+
+    def validate(self, attrs: dict) -> dict:
+        confirmacao = attrs.get('confirmacao_senha')
+        if confirmacao is not None and attrs['nova_senha'] != confirmacao:
+            raise serializers.ValidationError(
+                {'confirmacao_senha': 'A confirmação de senha deve ser idêntica à nova senha informada.'}
+            )
+        return attrs
