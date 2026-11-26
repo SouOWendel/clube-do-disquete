@@ -31,11 +31,6 @@ const config: ForgeConfig = {
           config: 'vite.main.config.mts',
           target: 'main',
         },
-        {
-          entry: 'src/preload.ts',
-          config: 'vite.preload.config.mts',
-          target: 'preload',
-        },
       ],
       // A interface agora é o app Angular em renderer/, não um renderer do Vite.
       renderer: [],
