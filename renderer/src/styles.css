@@ -1,0 +1,42 @@
+@import "tailwindcss";
+
+/* Paleta do Windows 95 */
+@theme {
+  --color-win-gray: #c0c0c0;
+  --color-win-dark: #808080;
+  --color-win-wallpaper: #00a8a8;
+  --color-win-title: #000080;
+  --font-win: Tahoma, "MS Sans Serif", Arial, sans-serif;
+}
+
+/* Borda em relevo (botão solto, barra de tarefas, janelas) */
+@utility bevel-out {
+  box-shadow:
+    inset -1px -1px 0 #000,
+    inset 1px 1px 0 #fff,
+    inset -2px -2px 0 var(--color-win-dark),
+    inset 2px 2px 0 #dfdfdf;
+}
+
+/* Borda afundada (botão pressionado, relógio, área de conteúdo) */
+@utility bevel-in {
+  box-shadow:
+    inset 1px 1px 0 var(--color-win-dark),
+    inset -1px -1px 0 #fff;
+}
+
+@utility bevel-pressed {
+  box-shadow:
+    inset 1px 1px 0 #000,
+    inset -1px -1px 0 #fff,
+    inset 2px 2px 0 var(--color-win-dark),
+    inset -2px -2px 0 #dfdfdf;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  user-select: none;
+}
