@@ -22,26 +22,17 @@ const config: ForgeConfig = {
   ],
   plugins: [
     new VitePlugin({
-      // `build` can specify multiple entry builds, which can be Main process, Preload scripts, Worker process, etc.
-      // If you are familiar with Vite configuration, it will look really familiar.
       build: [
         {
-          // `entry` is just an alias for `build.lib.entry` in the corresponding file of `config`.
           entry: 'src/main.ts',
           config: 'vite.main.config.mts',
           target: 'main',
         },
-        {
-          entry: 'src/preload.ts',
-          config: 'vite.preload.config.mts',
-          target: 'preload',
-        },
       ],
-      // A interface agora é o app Angular em renderer/, não um renderer do Vite.
+      // A interface é o app Angular em renderer/, não um renderer do Vite.
       renderer: [],
     }),
-    // Fuses are used to enable/disable various Electron functionality
-    // at package time, before code signing the application
+    // Liga/desliga recursos do Electron no empacotamento (segurança).
     new FusesPlugin({
       version: FuseVersion.V1,
       [FuseV1Options.RunAsNode]: false,

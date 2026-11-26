@@ -7,8 +7,8 @@ out/
 # Vite: build do processo principal e do preload
 .vite/
 # Angular: build e cache
-renderer/dist/
-renderer/.angular/
+frontend/renderer/dist/
+frontend/renderer/.angular/
 *.tsbuildinfo
 
 # ── Logs ─────────────────────────────────────

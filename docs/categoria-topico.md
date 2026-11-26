@@ -1,6 +1,6 @@
 # Categorias, Feed e Gerenciamento de Tópicos
 
-O módulo de categorias, feed e tópicos do **Clube do Disquete** está implementado no aplicativo `topicos` (`apps/backend/topicos/`), reutilizando os models `Categoria` e `Topico` de `core/models.py` e a autenticação global `JWTAuthentication` de `core/authentication.py`.
+O módulo de categorias, feed e tópicos do **Clube do Disquete** está implementado no aplicativo `topicos` (`backend/topicos/`), reutilizando os models `Categoria` e `Topico` de `core/models.py` e a autenticação global `JWTAuthentication` de `core/authentication.py`.
 
 ## Regras de Negócio Aplicadas
 
@@ -26,7 +26,7 @@ O módulo de categorias, feed e tópicos do **Clube do Disquete** está implemen
 
 ## Como Testar Localmente (Windows PowerShell)
 
-1. Inicie o servidor de desenvolvimento dentro de `apps/backend/` com o ambiente virtual ativado:
+1. Inicie o servidor de desenvolvimento dentro de `backend/` com o ambiente virtual ativado:
    ```powershell
    python manage.py runserver
    ```  

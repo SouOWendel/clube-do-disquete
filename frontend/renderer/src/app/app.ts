@@ -5,7 +5,6 @@ import { Taskbar } from './taskbar/taskbar';
 @Component({
   imports: [Taskbar, DrawWindow],
   selector: 'app-root',
-  styleUrl: './app.css',
   templateUrl: './app.html',
 })
 export class App {

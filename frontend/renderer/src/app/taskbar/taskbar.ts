@@ -1,4 +1,11 @@
-import { Component, DestroyRef, inject, input, output, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  input,
+  output,
+  signal,
+} from '@angular/core';
 
 /** Barra de tarefas do "Windows 95", fixa no fim da tela. */
 @Component({
@@ -18,6 +25,9 @@ export class Taskbar {
   }
 
   private formatTime(): string {
-    return new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    return new Date().toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
   }
 }

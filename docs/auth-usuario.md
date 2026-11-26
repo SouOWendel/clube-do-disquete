@@ -1,29 +1,29 @@
 # Autenticação e Gerenciamento de Usuários
 
-O módulo de autenticação do **Clube do Disquete** está implementado no aplicativo `usuarios` (`apps/backend/usuarios/`) com autenticação global via `core/authentication.py` (`JWTAuthentication`).
+O módulo de autenticação do **Clube do Disquete** está implementado no aplicativo `usuarios` (`backend/usuarios/`) com autenticação global via `core/authentication.py` (`JWTAuthentication`).
 
 ## Regras de Negócio Aplicadas
 
-* **Política de Senha e Termos:** O cadastro tradicional exige senha com no mínimo 8 caracteres (armazenada com hash via `django.contrib.auth.hashers.make_password`), confirmação de senha idêntica (`confirmacao_senha`) e aceite explícito dos termos (`termos_aceitos: true`).
-* **Sessão JWT *Stateless*:** O login e o cadastro retornam um token JWT (`HS256`).
-* **Acesso Social com Google:** Valida o `id_token` emitido pelo Google via `google-auth`, vincula automaticamente contas existentes com o mesmo e-mail e exige `termos_aceitos: true` no primeiro cadastro.
-* **Recuperação de Senha:** Emite um token JWT temporário (`tipo: recuperacao_senha`, validade padrão de 30 minutos) atrelado a uma impressão do `hash_senha` atual, invalidando o token automaticamente assim que a senha é alterada, sem exigir tabelas extras no banco.
+- **Política de Senha e Termos:** O cadastro tradicional exige senha com no mínimo 8 caracteres (armazenada com hash via `django.contrib.auth.hashers.make_password`), confirmação de senha idêntica (`confirmacao_senha`) e aceite explícito dos termos (`termos_aceitos: true`).
+- **Sessão JWT _Stateless_:** O login e o cadastro retornam um token JWT (`HS256`).
+- **Acesso Social com Google:** Valida o `id_token` emitido pelo Google via `google-auth`, vincula automaticamente contas existentes com o mesmo e-mail e exige `termos_aceitos: true` no primeiro cadastro.
+- **Recuperação de Senha:** Emite um token JWT temporário (`tipo: recuperacao_senha`, validade padrão de 30 minutos) atrelado a uma impressão do `hash_senha` atual, invalidando o token automaticamente assim que a senha é alterada, sem exigir tabelas extras no banco.
 
 ## Endpoints Disponíveis (`/api/auth/`)
 
-| Método | Rota | Autenticação | Descrição |
-|---|---|---|---|
-| `POST` | `/api/auth/cadastro/` | Pública | Cria uma conta tradicional e retorna `{ token, usuario }`. |
-| `POST` | `/api/auth/login/` | Pública | Autentica por `email` e `senha` e retorna `{ token, usuario }`. |
-| `POST` | `/api/auth/google/` | Pública | Valida `id_token` (ou `credential`) do Google e retorna `{ token, usuario }`. |
-| `POST` | `/api/auth/recuperar-senha/` | Pública | Inicia a recuperação de senha por e-mail sem expor se a conta existe. |
-| `POST` | `/api/auth/redefinir-senha/` | Pública | Valida o token temporário e atualiza a senha do usuário. |
-| `GET` | `/api/auth/me/` | `Bearer <token>` | Retorna o perfil do usuário autenticado. |
-| `POST` | `/api/auth/logout/` | `Bearer <token>` | Confirma o encerramento da sessão no cliente. |
+| Método | Rota                         | Autenticação     | Descrição                                                                     |
+| ------ | ---------------------------- | ---------------- | ----------------------------------------------------------------------------- |
+| `POST` | `/api/auth/cadastro/`        | Pública          | Cria uma conta tradicional e retorna `{ token, usuario }`.                    |
+| `POST` | `/api/auth/login/`           | Pública          | Autentica por `email` e `senha` e retorna `{ token, usuario }`.               |
+| `POST` | `/api/auth/google/`          | Pública          | Valida `id_token` (ou `credential`) do Google e retorna `{ token, usuario }`. |
+| `POST` | `/api/auth/recuperar-senha/` | Pública          | Inicia a recuperação de senha por e-mail sem expor se a conta existe.         |
+| `POST` | `/api/auth/redefinir-senha/` | Pública          | Valida o token temporário e atualiza a senha do usuário.                      |
+| `GET`  | `/api/auth/me/`              | `Bearer <token>` | Retorna o perfil do usuário autenticado.                                      |
+| `POST` | `/api/auth/logout/`          | `Bearer <token>` | Confirma o encerramento da sessão no cliente.                                 |
 
 ## Como Testar Localmente (Windows PowerShell)
 
-1. Com o ambiente virtual ativado dentro de `apps/backend/`, instale as novas dependências:
+1. Com o ambiente virtual ativado dentro de `backend/`, instale as novas dependências:
    ```powershell
    pip install -r requirements.txt
    ```
@@ -60,20 +60,20 @@ O módulo de autenticação do **Clube do Disquete** está implementado no aplic
 
 ### Resultados Esperados
 
-* **Cadastro (`201 Created`) e Login (`200 OK`):** Retornam o token JWT e os dados públicos do perfil sem expor `hash_senha`:
+- **Cadastro (`201 Created`) e Login (`200 OK`):** Retornam o token JWT e os dados públicos do perfil sem expor `hash_senha`:
   ```json
   {
-      "token": "eyJhbGciOiJIUzI1NiIs...",
-      "usuario": {
-          "id_usuario": 1,
-          "email": "teste@disquete.com",
-          "nome_usuario": "usuario_teste",
-          "termos_aceitos": true,
-          "possui_senha": true,
-          "google_vinculado": false,
-          "criado_em": "2026-11-25T23:30:00-03:00"
-      }
+    "token": "eyJhbGciOiJIUzI1NiIs...",
+    "usuario": {
+      "id_usuario": 1,
+      "email": "teste@disquete.com",
+      "nome_usuario": "usuario_teste",
+      "termos_aceitos": true,
+      "possui_senha": true,
+      "google_vinculado": false,
+      "criado_em": "2026-11-25T23:30:00-03:00"
+    }
   }
   ```
-* **Falha de Autenticação ou Token Ausente/Inválido:** Qualquer rota protegida (`/api/auth/me/`, `/api/auth/logout/`) chamada sem cabeçalho `Authorization: Bearer <token>` válido retorna **HTTP `401 Unauthorized`**.
-* **Reutilização do Token de Recuperação:** Após concluir `POST /api/auth/redefinir-senha/`, uma segunda tentativa com o mesmo token retorna **HTTP `400 Bad Request`** informando que o token já foi utilizado ou invalidado.
+- **Falha de Autenticação ou Token Ausente/Inválido:** Qualquer rota protegida (`/api/auth/me/`, `/api/auth/logout/`) chamada sem cabeçalho `Authorization: Bearer <token>` válido retorna **HTTP `401 Unauthorized`**.
+- **Reutilização do Token de Recuperação:** Após concluir `POST /api/auth/redefinir-senha/`, uma segunda tentativa com o mesmo token retorna **HTTP `400 Bad Request`** informando que o token já foi utilizado ou invalidado.
