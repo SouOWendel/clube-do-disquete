@@ -1,0 +1,46 @@
+<app-tela-auth>
+  <app-janela titulo="ENTRAR NO FÓRUM" icone="cadeado" class="w-[480px] max-w-full">
+    <app-botao-google />
+
+    <app-divisor-ou />
+
+    <form class="flex w-full flex-col gap-e4" [formGroup]="form" (ngSubmit)="entrar()" novalidate>
+      <app-campo
+        formControlName="email"
+        rotulo="E-MAIL"
+        icone="email"
+        tipo="email"
+        placeholder="exemplo@email.com"
+        autocomplete="email"
+        [erro]="erro('email')"
+      />
+
+      <app-campo
+        formControlName="senha"
+        rotulo="SENHA"
+        icone="cadeado"
+        tipo="password"
+        placeholder="••••••••"
+        autocomplete="current-password"
+        [erro]="erro('senha')"
+      />
+
+      <div class="flex w-full justify-end">
+        <a appLink routerLink="/esqueci-senha">Esqueci a senha</a>
+      </div>
+
+      @if (erroGeral(); as mensagem) {
+        <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+      }
+
+      <button appBotao type="submit" class="w-full" [disabled]="enviando()">
+        {{ enviando() ? 'ENTRANDO…' : 'ENTRAR' }}
+      </button>
+    </form>
+
+    <p class="m-0 flex w-full items-center justify-center gap-e2 texto-corpo-pequeno text-texto-secundario">
+      Ainda não possui conta?
+      <a appLink routerLink="/cadastro">Criar agora</a>
+    </p>
+  </app-janela>
+</app-tela-auth>

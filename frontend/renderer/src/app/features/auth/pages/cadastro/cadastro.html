@@ -1,0 +1,71 @@
+<app-tela-auth>
+  <app-janela
+    titulo="+ CRIAR CONTA"
+    icone="usuario-mais"
+    class="w-[480px] max-w-full"
+    (fechar)="router.navigateByUrl('/entrar')"
+  >
+    <app-botao-google />
+
+    <app-divisor-ou />
+
+    <form class="flex w-full flex-col gap-e4" [formGroup]="form" (ngSubmit)="criarConta()" novalidate>
+      <app-campo
+        formControlName="email"
+        rotulo="E-MAIL"
+        icone="email"
+        tipo="email"
+        placeholder="exemplo@email.com"
+        autocomplete="email"
+        [erro]="erro('email')"
+      />
+
+      <app-campo
+        formControlName="nome_usuario"
+        rotulo="NOME DE USUÁRIO"
+        icone="usuario"
+        placeholder="seu_apelido"
+        autocomplete="username"
+        [erro]="erro('nome_usuario')"
+      />
+
+      <app-campo
+        formControlName="senha"
+        rotulo="SENHA"
+        icone="cadeado"
+        tipo="password"
+        placeholder="••••••••"
+        autocomplete="new-password"
+        ajuda="Mínimo de 8 caracteres."
+        [erro]="erro('senha')"
+      />
+
+      <app-campo
+        formControlName="confirmacao_senha"
+        rotulo="CONFIRMAR SENHA"
+        icone="cadeado"
+        tipo="password"
+        placeholder="••••••••"
+        autocomplete="new-password"
+        [erro]="erro('confirmacao_senha')"
+      />
+
+      <app-checkbox formControlName="termos_aceitos" [erro]="erro('termos_aceitos')">
+        Li e aceito os termos de uso
+      </app-checkbox>
+
+      @if (erroGeral(); as mensagem) {
+        <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+      }
+
+      <button appBotao type="submit" class="w-full" [disabled]="enviando()">
+        {{ enviando() ? 'CRIANDO…' : 'CRIAR CONTA' }}
+      </button>
+    </form>
+
+    <p class="m-0 flex w-full items-center justify-center gap-e2 texto-corpo-pequeno text-texto-secundario">
+      Já possui conta?
+      <a appLink routerLink="/entrar">Entrar</a>
+    </p>
+  </app-janela>
+</app-tela-auth>

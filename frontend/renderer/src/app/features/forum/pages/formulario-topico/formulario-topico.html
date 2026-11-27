@@ -1,0 +1,60 @@
+<div class="flex w-[840px] max-w-full flex-col gap-e4">
+  <app-titulo-de-pagina>{{ caminho() }}</app-titulo-de-pagina>
+
+  <app-janela
+    class="w-full"
+    [titulo]="editando() ? 'EDITAR TÓPICO' : '+ NOVO TÓPICO'"
+    [icone]="editando() ? 'editar' : undefined"
+    (fechar)="cancelar()"
+  >
+    @if (erroAoCarregar(); as mensagem) {
+      <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+    } @else if (semPermissao()) {
+      <app-aviso tipo="erro">Só quem criou o tópico pode editá-lo.</app-aviso>
+    } @else if (editando() && original.isLoading()) {
+      <p class="m-0 texto-corpo text-texto-secundario">Carregando tópico…</p>
+    } @else {
+      <form class="flex w-full flex-col gap-e4" [formGroup]="form" (ngSubmit)="salvar()" novalidate>
+        <app-seletor
+          formControlName="categoria"
+          rotulo="CATEGORIA"
+          placeholder="Selecione uma categoria"
+          [opcoes]="opcoesSeletor()"
+          [erro]="erro('categoria')"
+        />
+
+        <app-campo
+          formControlName="titulo"
+          rotulo="ASSUNTO"
+          placeholder="Ex.: RTX 4060 com Ryzen 5 5600 tem gargalo em 1080p?"
+          [maxlength]="140"
+          [ajuda]="ajudaTitulo()"
+          [erro]="erro('titulo')"
+        />
+
+        <app-area-de-texto
+          formControlName="corpo"
+          rotulo="DICA OU DÚVIDA"
+          placeholder="Conte a configuração completa (CPU, placa-mãe, memória, fonte, placa de vídeo), o que já testou e o que aconteceu."
+          ajuda="Mínimo de 20 caracteres. Quanto mais contexto, melhor a resposta."
+          [erro]="erro('corpo')"
+        />
+
+        @if (erroGeral(); as mensagem) {
+          <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+        }
+
+        <div class="flex w-full items-center justify-between">
+          <button appBotao estilo="secundario" type="button" (click)="cancelar()">CANCELAR</button>
+          <button appBotao type="submit" [disabled]="enviando()">
+            @if (enviando()) {
+              SALVANDO…
+            } @else {
+              {{ editando() ? 'SALVAR ALTERAÇÕES' : 'PUBLICAR TÓPICO' }}
+            }
+          </button>
+        </div>
+      </form>
+    }
+  </app-janela>
+</div>
