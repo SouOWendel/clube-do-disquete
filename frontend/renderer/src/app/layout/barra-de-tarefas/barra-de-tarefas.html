@@ -9,8 +9,22 @@
 
 <span class="h-8 w-0.5 shrink-0 bg-borda-sutil" aria-hidden="true"></span>
 
-<!-- Abas internas (preenchidas pelas features do forum) -->
-<nav class="flex h-9 min-w-0 flex-1 items-center gap-e2 overflow-hidden" aria-label="Janelas abertas"></nav>
+<!-- Abas internas -->
+<nav class="flex h-9 min-w-0 flex-1 items-center gap-e2 overflow-hidden" aria-label="Janelas abertas">
+  @if (sessao.logado()) {
+    <app-aba nome="Tópicos" icone="pasta" rota="/" [ativa]="!abaAtual()" />
+    @if (abaAtual(); as aba) {
+      <app-aba
+        [nome]="aba.nome"
+        [icone]="aba.icone"
+        [rota]="aba.url"
+        [ativa]="true"
+        [fechavel]="true"
+        (fechar)="fecharAba()"
+      />
+    }
+  }
+</nav>
 
 <span class="shrink-0 texto-rotulo text-texto-inverso" aria-hidden="true">C:\&gt;</span>
 
@@ -19,10 +33,14 @@
 >
   <app-icone nome="busca" [tamanho]="16" />
   <input
+    #busca
     type="search"
     class="min-w-0 flex-1 border-0 bg-transparent p-0 texto-corpo-pequeno text-texto-padrao outline-none placeholder:text-texto-secundario"
     placeholder="Buscar tópicos…"
     aria-label="Buscar tópicos"
+    [disabled]="!sessao.logado()"
+    (keydown.enter)="buscar(busca.value)"
+    (search)="buscar(busca.value)"
   />
 </label>
 

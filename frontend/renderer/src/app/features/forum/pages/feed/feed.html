@@ -1,0 +1,83 @@
+<!-- Boas-vindas -->
+<section class="flex w-full flex-col gap-e2 border-2 border-solid border-borda-padrao bg-fundo-superficie px-e6 py-e4 sombra-janela">
+  <h1 class="m-0 texto-destaque text-texto-padrao">Seu próximo upgrade começa aqui!</h1>
+  <p class="m-0 texto-corpo text-texto-secundario">
+    Dicas de hardware, recomendações de peças, montagem de PCs, upgrades e soluções para deixar sua máquina ainda melhor.
+  </p>
+</section>
+
+<div class="flex w-full items-start gap-e6">
+  <!-- Lateral -->
+  <aside class="flex w-[360px] shrink-0 flex-col gap-e6">
+    <app-janela-categorias [categorias]="listaCategorias()" [selecionada]="codigo() ?? null" />
+
+    <app-janela titulo="COMUNIDADE NOVA" controles="nenhum" corpo="p-e4 gap-e4">
+      <p class="m-0 w-full texto-corpo text-texto-padrao">
+        Compartilhe conhecimentos, dicas e experiências sobre hardware e tecnologia.
+      </p>
+      <a appBotao routerLink="/topicos/novo" class="w-full">+ CRIAR TÓPICO</a>
+    </app-janela>
+  </aside>
+
+  <!-- Feed -->
+  <app-janela class="min-w-0 flex-1" [titulo]="caminho()" icone="pasta" corpo="">
+    <div class="flex w-full items-center gap-e3 border-b-2 border-solid border-borda-padrao bg-fundo-sutil px-e4 py-e3">
+      <a appBotao routerLink="/topicos/novo">+ NOVO TÓPICO</a>
+      <span class="flex-1"></span>
+      <a
+        appBotao
+        [estilo]="ordem() === 'recentes' ? 'primario' : 'secundario'"
+        [pressionado]="ordem() === 'recentes'"
+        [routerLink]="[]"
+        [queryParams]="{ ordenar: null }"
+        queryParamsHandling="merge"
+      >
+        RECENTES
+      </a>
+      <a
+        appBotao
+        [estilo]="ordem() === 'em-alta' ? 'primario' : 'secundario'"
+        [pressionado]="ordem() === 'em-alta'"
+        [routerLink]="[]"
+        [queryParams]="{ ordenar: 'em-alta' }"
+        queryParamsHandling="merge"
+      >
+        EM ALTA
+      </a>
+    </div>
+
+    @if (busca(); as termo) {
+      <div class="w-full p-e4 pb-0">
+        <app-aviso tipo="info">
+          Tópicos com “{{ termo }}” no assunto.
+          <a appLink [routerLink]="[]" [queryParams]="{ busca: null }" queryParamsHandling="merge">Limpar busca</a>
+        </app-aviso>
+      </div>
+    }
+
+    <div
+      class="flex w-full gap-e4 border-b border-solid border-borda-sutil bg-fundo-superficie py-e2 pr-e4 pl-16 texto-rotulo-pequeno text-texto-destaque"
+      aria-hidden="true"
+    >
+      <span class="flex-1">TÓPICOS</span>
+      <span class="w-16 text-center">RESP.</span>
+      <span class="w-18 text-center">CRIADO</span>
+    </div>
+
+    @if (erro(); as mensagem) {
+      <div class="w-full p-e4"><app-aviso tipo="erro">{{ mensagem }}</app-aviso></div>
+    } @else if (!topicos.hasValue()) {
+      <p class="m-0 w-full p-e4 texto-corpo text-texto-secundario">Carregando tópicos…</p>
+    } @else {
+      <ul class="m-0 w-full list-none p-0" aria-label="Tópicos">
+        @for (topico of visiveis(); track topico.id_topico) {
+          <li><app-linha-de-topico [topico]="topico" [novo]="novos.eNovo(topico.id_topico)" /></li>
+        } @empty {
+          <li class="p-e4 texto-corpo text-texto-secundario">
+            {{ busca() ? 'Nenhum tópico encontrado.' : 'Nenhum tópico por aqui ainda. Que tal criar o primeiro?' }}
+          </li>
+        }
+      </ul>
+    }
+  </app-janela>
+</div>

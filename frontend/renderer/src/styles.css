@@ -4,6 +4,7 @@
 @import '@fontsource/jetbrains-mono/800.css';
 @import '@fontsource/jersey-10/400.css';
 @import '@fontsource/jersey-25/400.css';
+@import '@fontsource/press-start-2p/400.css';
 
 /*
  * Tokens do design system "Clube do Disquete" (Figma > Design System).
@@ -16,6 +17,8 @@
   --cor-fundo-superficie: #ffffff;
   --cor-fundo-sutil: #e0e0e0;
   --cor-fundo-destaque: #e5caa4;
+  --cor-fundo-hover: #f2f2f2;
+  --cor-sobreposicao: rgb(0 0 0 / 0.35);
 
   /* Barras (titulo e tarefas) */
   --cor-barra-topo: #2e3e42;
@@ -50,6 +53,8 @@
   --color-fundo-superficie: var(--cor-fundo-superficie);
   --color-fundo-sutil: var(--cor-fundo-sutil);
   --color-fundo-destaque: var(--cor-fundo-destaque);
+  --color-fundo-hover: var(--cor-fundo-hover);
+  --color-sobreposicao: var(--cor-sobreposicao);
   --color-borda-padrao: var(--cor-borda-padrao);
   --color-borda-sutil: var(--cor-borda-sutil);
   --color-borda-destaque: var(--cor-borda-destaque);
@@ -85,6 +90,27 @@
 }
 
 /* Tipografia (estilos de texto do Figma) */
+@utility texto-destaque {
+  font-family: 'Press Start 2P', var(--font-mono);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+@utility texto-titulo-pagina {
+  font-family: var(--font-mono);
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+@utility texto-titulo-secao {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
 @utility texto-titulo-janela {
   font-family: var(--font-mono);
   font-size: 18px;

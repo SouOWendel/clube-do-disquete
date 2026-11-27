@@ -1,9 +1,11 @@
 import { Component, inject, output } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { abaDaRotaAtual } from '../../core/navegacao/aba-da-rota';
 import { Sessao } from '../../core/sessao/sessao';
 import { Botao } from '../../shared/ui/botao/botao';
 import { Icone } from '../../shared/ui/icone/icone';
 import { Logo } from '../../shared/ui/logo/logo';
+import { Aba } from './aba';
 
 /**
  * Barra inferior estilo Windows 95 (Figma > Barra de tarefas: Deslogado/Logado).
@@ -11,7 +13,7 @@ import { Logo } from '../../shared/ui/logo/logo';
  */
 @Component({
   selector: 'app-barra-de-tarefas',
-  imports: [RouterLink, Botao, Icone, Logo],
+  imports: [RouterLink, Aba, Botao, Icone, Logo],
   templateUrl: './barra-de-tarefas.html',
   host: {
     class:
@@ -21,6 +23,19 @@ import { Logo } from '../../shared/ui/logo/logo';
 })
 export class BarraDeTarefas {
   protected readonly sessao = inject(Sessao);
+  private readonly router = inject(Router);
+
+  /** Aba aberta pela tela atual (Topico, Novo topico, Editar topico...). */
+  protected readonly abaAtual = abaDaRotaAtual();
 
   readonly sair = output<void>();
+
+  protected buscar(termo: string): void {
+    const busca = termo.trim() || null;
+    this.router.navigate(['/'], { queryParams: { busca } });
+  }
+
+  protected fecharAba(): void {
+    this.router.navigateByUrl('/');
+  }
 }

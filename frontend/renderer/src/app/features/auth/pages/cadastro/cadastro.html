@@ -50,14 +50,9 @@
         [erro]="erro('confirmacao_senha')"
       />
 
-      <div class="flex flex-col gap-e1">
-        <app-checkbox formControlName="termos_aceitos" [erro]="!!erro('termos_aceitos')">
-          Li e aceito os termos de uso
-        </app-checkbox>
-        @if (erro('termos_aceitos'); as mensagem) {
-          <span class="texto-corpo-pequeno text-texto-erro">{{ mensagem }}</span>
-        }
-      </div>
+      <app-checkbox formControlName="termos_aceitos" [erro]="erro('termos_aceitos')">
+        Li e aceito os termos de uso
+      </app-checkbox>
 
       @if (erroGeral(); as mensagem) {
         <app-aviso tipo="erro">{{ mensagem }}</app-aviso>

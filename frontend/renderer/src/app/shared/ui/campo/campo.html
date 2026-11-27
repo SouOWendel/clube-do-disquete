@@ -1,12 +1,8 @@
-<label
-  class="texto-rotulo"
-  [for]="id"
-  [class]="desabilitado() ? 'text-texto-desabilitado' : 'text-texto-padrao'"
->
-  {{ rotulo() }}
-</label>
+@if (rotulo(); as texto) {
+  <label [class]="classesRotulo()" [for]="id">{{ texto }}</label>
+}
 
-<div [class]="classesCaixa()">
+<div class="items-center gap-e3" [class]="classesCaixa()">
   @if (icone(); as nome) {
     <app-icone [nome]="nome" />
   }
@@ -16,21 +12,18 @@
     [type]="tipo()"
     [placeholder]="placeholder()"
     [autocomplete]="autocomplete()"
+    [attr.maxlength]="maxlength() ?? null"
     [value]="valor()"
     [disabled]="desabilitado()"
+    [attr.aria-label]="rotulo() ? null : placeholder()"
     [attr.aria-invalid]="erro() ? true : null"
-    [attr.aria-describedby]="erro() || ajuda() ? id + '-ajuda' : null"
-    (input)="digitar($event)"
+    [attr.aria-describedby]="erro() || ajuda() ? idAjuda : null"
+    (input)="alterar($any($event.target).value)"
     (focus)="focado.set(true)"
     (blur)="sair()"
   />
 </div>
 
-@if (erro(); as mensagem) {
-  <p [id]="id + '-ajuda'" class="m-0 flex items-center gap-e1 texto-corpo-pequeno text-texto-erro">
-    <app-icone nome="alerta" [tamanho]="14" />
-    {{ mensagem }}
-  </p>
-} @else if (ajuda(); as texto) {
-  <p [id]="id + '-ajuda'" class="m-0 texto-corpo-pequeno text-texto-secundario">{{ texto }}</p>
+@if (erro() || ajuda()) {
+  <app-mensagem-de-ajuda [id]="idAjuda" [erro]="erro()" [ajuda]="ajuda()" />
 }
