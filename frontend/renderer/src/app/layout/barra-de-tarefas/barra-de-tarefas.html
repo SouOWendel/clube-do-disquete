@@ -24,6 +24,20 @@
       />
     }
   }
+
+  <!-- Janelas minimizadas: clicar restaura (vale tambem nas telas de login) -->
+  @for (janela of janelas.minimizadas(); track janela.id) {
+    <button
+      type="button"
+      class="flex w-[180px] min-w-[96px] shrink cursor-pointer items-center gap-e2 border-2 border-solid border-borda-padrao bg-fundo-sutil px-e3 py-e2 text-texto-padrao sombra-botao hover:bg-fundo-hover focus-visible:border-dashed focus-visible:outline-none"
+      [attr.aria-label]="'Restaurar ' + janela.titulo()"
+      [title]="janela.titulo()"
+      (click)="janela.restaurar()"
+    >
+      <app-icone [nome]="janela.icone() ?? 'grade'" [tamanho]="16" class="text-texto-destaque" />
+      <span class="min-w-0 flex-1 truncate text-left texto-corpo-pequeno">{{ janela.titulo() }}</span>
+    </button>
+  }
 </nav>
 
 <span class="shrink-0 texto-rotulo text-texto-inverso" aria-hidden="true">C:\&gt;</span>

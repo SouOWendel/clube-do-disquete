@@ -1,3 +1,15 @@
+/* Barra de titulo arrastavel: sem selecionar texto e sem rolar a tela no toque */
+.barra-de-titulo {
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+
+/* Durante o arraste a janela fica um pouco translucida para indicar que esta sendo movida */
+:host(.arrastando) {
+  opacity: 0.92;
+}
+
 /* Controle de janela (Figma > Controle de janela): 24x24, borda fina */
 .controle {
   display: flex;
