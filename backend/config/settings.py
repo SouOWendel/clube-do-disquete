@@ -78,6 +78,20 @@ REST_FRAMEWORK = {
     'UNAUTHENTICATED_USER': None
 }
 
+# usa o Redis como cache compartilhado (guarda os tokens revogados no logout).
+# com REDIS_URL vazio cai para um cache em memoria, que so vale para um unico processo e some ao reiniciar
+REDIS_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+CACHES = {
+    'default': (
+        {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': REDIS_URL,
+        }
+        if REDIS_URL
+        else {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}
+    )
+}
+
 # define os parametros usados na geracao e validacao dos tokens jwt de acesso e de recuperacao de senha
 JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY', SECRET_KEY)
 JWT_ALGORITHM = 'HS256'

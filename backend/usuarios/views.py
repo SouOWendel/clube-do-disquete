@@ -15,10 +15,12 @@ from .serializers import (
     UsuarioPerfilSerializer
 )
 from .services import (
+    decodificar_token_acesso,
     enviar_email_recuperacao,
     gerar_nome_usuario_unico,
     gerar_token_acesso,
     gerar_token_recuperacao,
+    revogar_token_acesso,
     validar_token_google,
     validar_token_recuperacao
 )
@@ -221,10 +223,11 @@ def perfil_atual(request):
     )
 
 
-# encerra a sessao no fluxo sem estado orientando o cliente a descartar o token jwt
+# encerra a sessao revogando o token jwt usado na requisicao ate a sua expiracao natural
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout(request):
+    revogar_token_acesso(request.auth, decodificar_token_acesso(request.auth))
     return Response(
         {'detail': 'Sessão encerrada com sucesso.'},
         status=status.HTTP_200_OK

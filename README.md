@@ -52,7 +52,7 @@ clube-do-disquete/
 
 ## Como Rodar
 
-- **Banco de dados:** execute os scripts de `database/` na ordem (veja [docs/database.md](docs/database.md)).
+- **Banco de dados e Redis:** `docker compose up -d` na raiz sobe o PostgreSQL (com o schema aplicado) e o Redis, que guarda os tokens revogados no logout. Sem Docker, execute os scripts de `database/` na ordem (veja [docs/database.md](docs/database.md)) e aponte `REDIS_URL` para um Redis local.
 - **Backend:** dentro de `backend/`, siga [docs/django-setup.md](docs/django-setup.md).
 - **Frontend (desktop):**
 
