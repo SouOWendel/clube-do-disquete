@@ -217,5 +217,61 @@ describe('Forum', () => {
     ).toContain('Tópico excluído.');
   });
 
+  it('mostra a lixeira so nas respostas do autor e exclui apos confirmar', async () => {
+    entrar();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/topicos/7');
+    http.expectOne(`${API}/topicos/7/`).flush({ ...TOPICO, autoria: false });
+    http.expectOne(`${API}/topicos/7/respostas/`).flush([
+      {
+        id_resposta: 1,
+        id_topico: 7,
+        corpo: 'Resposta de outra pessoa.',
+        autor: { id_usuario: 2, nome_usuario: 'outra_pessoa' },
+        criado_em: '2026-11-20T17:09:00-03:00',
+        autoria: false,
+      },
+      {
+        id_resposta: 2,
+        id_topico: 7,
+        corpo: 'Minha resposta.',
+        autor: { id_usuario: 1, nome_usuario: 'pedro_old' },
+        criado_em: '2026-11-20T17:10:00-03:00',
+        autoria: true,
+      },
+    ]);
+    await harness.fixture.whenStable();
+
+    const tela = harness.routeNativeElement!;
+    const lixeiras = tela.querySelectorAll<HTMLButtonElement>(
+      'button[aria-label="Excluir resposta"]',
+    );
+    expect(lixeiras.length).toBe(1);
+    expect(tela.textContent).toContain('RESPOSTAS (2)');
+
+    lixeiras[0].click();
+    await harness.fixture.whenStable();
+    const dialogo = [...tela.querySelectorAll('dialog')].find((d) =>
+      d.textContent?.includes('EXCLUIR RESPOSTA?'),
+    )!;
+    expect(dialogo.textContent).toContain('Minha resposta.');
+    [...dialogo.querySelectorAll<HTMLButtonElement>('button')]
+      .find((b) => b.textContent?.trim() === 'EXCLUIR')!
+      .click();
+
+    http
+      .expectOne({ url: `${API}/topicos/7/respostas/2/`, method: 'DELETE' })
+      .flush(null);
+    await harness.fixture.whenStable();
+
+    expect(tela.textContent).toContain('RESPOSTAS (1)');
+    expect(tela.textContent).not.toContain('Minha resposta.');
+    expect(
+      TestBed.inject(Notificacoes)
+        .lista()
+        .map((n) => n.mensagem),
+    ).toContain('Resposta excluída.');
+  });
+
   afterEach(() => http.match(() => true));
 });
