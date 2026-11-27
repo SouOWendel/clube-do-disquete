@@ -3,6 +3,7 @@ from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from core.models import Resposta, Topico
+from core.tempo_real import emitir_apos_commit
 from .serializers import RespostaEscritaSerializer, RespostaLeituraSerializer
 
 
@@ -46,6 +47,11 @@ class RespostaListaCriacaoView(generics.ListCreateAPIView):
             resposta,
             context={'request': request},
         )
+        # envia a resposta para quem esta no topico e o novo total para o contador RESP. do feed (RF15)
+        emitir_apos_commit('resposta_criada', {
+            'resposta': RespostaLeituraSerializer(resposta).data,
+            'total_respostas': Resposta.objects.filter(topico=topico).count(),
+        })
         return Response(serializer_saida.data, status=status.HTTP_201_CREATED)
 
 
@@ -64,4 +70,9 @@ class RespostaExclusaoView(APIView):
             raise PermissionDenied('Você não tem permissão para excluir esta resposta.')
 
         resposta.delete()
+        emitir_apos_commit('resposta_excluida', {
+            'id_topico': id_topico,
+            'id_resposta': id_resposta,
+            'total_respostas': Resposta.objects.filter(topico_id=id_topico).count(),
+        })
         return Response(status=status.HTTP_204_NO_CONTENT)

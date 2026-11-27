@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from core.models import Categoria, Topico
+from core.tempo_real import emitir_apos_commit
 from .serializers import (
     CategoriaSerializer,
     TopicoDetalheSerializer,
@@ -86,6 +87,8 @@ def topicos_colecao(request):
     serializer.is_valid(raise_exception=True)
     topico = serializer.save(autor=request.user)
     topico_completo = _obter_queryset_topicos().get(id_topico=topico.id_topico)
+    # sem request no contexto o campo autoria sai falso; cada cliente compara o autor com o proprio usuario
+    emitir_apos_commit('topico_criado', {'topico': TopicoListaSerializer(topico_completo).data})
 
     return Response(
         TopicoDetalheSerializer(topico_completo, context={'request': request}).data,
@@ -123,10 +126,16 @@ def topico_detalhe(request, id_topico: int):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         topico_atualizado = _obter_queryset_topicos().get(id_topico=topico.id_topico)
+        emitir_apos_commit(
+            'topico_atualizado',
+            {'topico': TopicoDetalheSerializer(topico_atualizado).data}
+        )
         return Response(
             TopicoDetalheSerializer(topico_atualizado, context={'request': request}).data,
             status=status.HTTP_200_OK
         )
 
     topico.delete()
+    # avisa quem esta com o topico aberto para voltar ao feed (RN06)
+    emitir_apos_commit('topico_excluido', {'id_topico': id_topico})
     return Response(status=status.HTTP_204_NO_CONTENT)
