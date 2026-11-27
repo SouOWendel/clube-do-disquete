@@ -81,15 +81,14 @@ export class PaginaTopico {
   });
 
   // Responder
-  protected readonly resposta = inject(NonNullableFormBuilder).control('', [
-    Validators.required,
-    Validators.maxLength(LIMITES.respostaMax),
-  ]);
+  protected readonly formResposta = inject(NonNullableFormBuilder).group({
+    corpo: ['', [Validators.required, Validators.maxLength(LIMITES.respostaMax)]],
+  });
   protected readonly enviando = signal(false);
   protected readonly erroResposta = signal<string | null>(null);
 
   protected responder(): void {
-    const corpo = this.resposta.value.trim();
+    const corpo = this.formResposta.controls.corpo.value.trim();
     if (!corpo) {
       this.erroResposta.set('Escreva sua mensagem antes de enviar.');
       return;
@@ -102,7 +101,7 @@ export class PaginaTopico {
       next: (nova) => {
         this.enviando.set(false);
         this.enviadas.update((lista) => [...lista, nova]);
-        this.resposta.reset();
+        this.formResposta.reset();
       },
       error: (erro: unknown) => {
         this.enviando.set(false);

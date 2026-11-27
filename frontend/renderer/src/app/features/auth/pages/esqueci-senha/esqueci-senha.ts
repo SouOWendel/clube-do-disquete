@@ -21,10 +21,10 @@ export class EsqueciSenha {
   private readonly auth = inject(AuthApi);
   protected readonly router = inject(Router);
 
-  protected readonly email = inject(NonNullableFormBuilder).control('', [
-    Validators.required,
-    Validators.email,
-  ]);
+  protected readonly form = inject(NonNullableFormBuilder).group({
+    email: ['', [Validators.required, Validators.email]],
+  });
+  private readonly email = this.form.controls.email;
 
   protected readonly enviando = signal(false);
   protected readonly enviado = signal(false);

@@ -9,9 +9,9 @@
       Informe o e-mail cadastrado. Enviaremos um link para você redefinir sua senha.
     </p>
 
-    <form class="flex w-full flex-col gap-e4" (ngSubmit)="enviarLink()" novalidate>
+    <form class="flex w-full flex-col gap-e4" [formGroup]="form" (ngSubmit)="enviarLink()" novalidate>
       <app-campo
-        [formControl]="email"
+        formControlName="email"
         rotulo="E-MAIL"
         icone="email"
         tipo="email"

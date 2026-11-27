@@ -126,6 +126,38 @@ describe('Forum', () => {
     http.expectNone(`${API}/topicos/`);
   });
 
+  it('envia a resposta para a API e a mostra na lista', async () => {
+    entrar();
+    const harness = await RouterTestingHarness.create();
+    await harness.navigateByUrl('/topicos/7');
+    http.expectOne(`${API}/topicos/7/`).flush({ ...TOPICO, autoria: false });
+    http.expectOne(`${API}/topicos/7/respostas/`).flush([]);
+    await harness.fixture.whenStable();
+
+    const tela = harness.routeNativeElement!;
+    expect(tela.textContent).not.toContain('EDITAR');
+    const caixa = tela.querySelector<HTMLTextAreaElement>('textarea')!;
+    caixa.value = 'Testa sem periféricos USB.';
+    caixa.dispatchEvent(new Event('input'));
+    await harness.fixture.whenStable();
+    tela.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
+
+    const req = http.expectOne({ url: `${API}/topicos/7/respostas/`, method: 'POST' });
+    expect(req.request.body).toEqual({ corpo: 'Testa sem periféricos USB.' });
+    req.flush({
+      id_resposta: 1,
+      id_topico: 7,
+      corpo: 'Testa sem periféricos USB.',
+      autor: { id_usuario: 1, nome_usuario: 'pedro_old' },
+      criado_em: '2026-11-20T17:09:00-03:00',
+      autoria: true,
+    });
+    await harness.fixture.whenStable();
+
+    expect(tela.textContent).toContain('RESPOSTAS (1)');
+    expect(caixa.value).toBe('');
+  });
+
   it('mostra EDITAR e EXCLUIR so para o autor e exclui apos confirmar', async () => {
     entrar();
     const harness = await RouterTestingHarness.create();

@@ -43,9 +43,9 @@
 
   <!-- Responder -->
   <app-janela class="w-full" titulo="RESPONDER" icone="enviar" corpo="p-e4 gap-e3">
-    <form class="flex w-full flex-col gap-e3" (ngSubmit)="responder()">
+    <form class="flex w-full flex-col gap-e3" [formGroup]="formResposta" (ngSubmit)="responder()">
       <app-area-de-texto
-        [formControl]="resposta"
+        formControlName="corpo"
         placeholder="Escreva sua mensagem..."
         ajuda="Máximo de 10.000 caracteres."
         [limite]="LIMITE_RESPOSTA"
