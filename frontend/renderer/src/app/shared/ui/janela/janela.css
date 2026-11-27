@@ -1,0 +1,64 @@
+/* Controle de janela (Figma > Controle de janela): 24x24, borda fina */
+.controle {
+  display: flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid var(--cor-borda-padrao);
+  background: var(--cor-fundo-sutil);
+  color: var(--cor-texto-padrao);
+  cursor: pointer;
+}
+
+.controle:hover {
+  background: var(--cor-fundo-superficie);
+}
+
+.controle:focus-visible {
+  outline: 1px dashed var(--cor-borda-padrao);
+  outline-offset: 1px;
+}
+
+/* Animacao de abertura definida no Figma: sobe 8px, cresce de 0.96 e aparece */
+:host {
+  animation:
+    janela-surge 0.4s linear both,
+    janela-escala 0.4s linear both;
+}
+
+@keyframes janela-surge {
+  0%,
+  12.5% {
+    opacity: 0;
+    translate: 0 8px;
+    animation-timing-function: ease-out;
+  }
+  50% {
+    opacity: 1;
+  }
+  75%,
+  100% {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+@keyframes janela-escala {
+  0%,
+  12.5% {
+    scale: 0.96;
+    animation-timing-function: cubic-bezier(0.45, 1.45, 0.8, 1);
+  }
+  75%,
+  100% {
+    scale: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
+}

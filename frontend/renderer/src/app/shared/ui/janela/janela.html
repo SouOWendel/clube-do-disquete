@@ -1,0 +1,24 @@
+<header
+  class="flex w-full items-center gap-e2 bg-linear-to-r from-(--cor-barra-topo) to-(--cor-barra-base) px-e3 py-e2 text-texto-inverso"
+>
+  @if (icone(); as nome) {
+    <app-icone [nome]="nome" />
+  }
+  <h2 class="m-0 min-w-0 flex-1 texto-titulo-janela">{{ titulo() }}</h2>
+
+  <div class="flex items-start gap-e1">
+    <button type="button" class="controle" aria-label="Minimizar" (click)="minimizar.emit()">
+      <app-icone nome="minimizar" [tamanho]="16" />
+    </button>
+    <button type="button" class="controle" aria-label="Maximizar" (click)="maximizar.emit()">
+      <app-icone nome="maximizar" [tamanho]="16" />
+    </button>
+    <button type="button" class="controle" aria-label="Fechar" (click)="fechar.emit()">
+      <app-icone nome="fechar" [tamanho]="16" />
+    </button>
+  </div>
+</header>
+
+<div class="flex w-full flex-col items-start gap-e4 p-e6">
+  <ng-content />
+</div>

@@ -1,0 +1,70 @@
+/* Medidas e transformacoes copiadas do componente Logo (Figma 49:13), em 470x185. */
+:host {
+  display: block;
+  position: relative;
+  flex-shrink: 0;
+  user-select: none;
+  pointer-events: none;
+}
+
+.palco {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 470px;
+  height: 185px;
+  transform-origin: 0 0;
+}
+
+.linha {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  translate: -50% 0;
+  transform-style: preserve-3d;
+}
+
+.giro {
+  flex: none;
+  rotate: -13.34deg;
+  transform-style: preserve-3d;
+}
+
+p {
+  margin: 0;
+  font-size: 150px;
+  line-height: normal;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.clube {
+  left: 260.64px;
+  top: -77.51px;
+  width: 468.194px;
+  height: 258.865px;
+}
+
+.clube p {
+  font-family: 'Jersey 10', monospace;
+  color: #2b2b2b;
+  transform: translateZ(100px) rotateX(38.767deg) rotateY(-16.45deg) rotateZ(18.945deg);
+}
+
+.disquete {
+  left: 233.78px;
+  top: -14.93px;
+  width: 509.442px;
+  height: 258.544px;
+}
+
+/* Contorno externo de 12px em #B51111 (traco de 24px pintado por baixo do preenchimento) */
+.disquete p {
+  font-family: 'Jersey 25', monospace;
+  color: #e6e2ce;
+  -webkit-text-stroke: 24px #b51111;
+  paint-order: stroke fill;
+  text-shadow: 7px 12px 25px rgb(0 0 0 / 0.25);
+  transform: translateZ(100px) rotateX(53.43deg) rotateY(-11.038deg) rotateZ(25.369deg);
+}

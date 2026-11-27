@@ -1,0 +1,39 @@
+<app-tela-auth>
+  <app-janela
+    titulo="RECUPERAR A SENHA"
+    icone="email"
+    class="w-[480px] max-w-full"
+    (fechar)="router.navigateByUrl('/entrar')"
+  >
+    <p class="m-0 w-full texto-corpo text-texto-padrao">
+      Informe o e-mail cadastrado. Enviaremos um link para você redefinir sua senha.
+    </p>
+
+    <form class="flex w-full flex-col gap-e4" (ngSubmit)="enviarLink()" novalidate>
+      <app-campo
+        [formControl]="email"
+        rotulo="E-MAIL"
+        icone="email"
+        tipo="email"
+        placeholder="exemplo@email.com"
+        autocomplete="email"
+        [erro]="erro()"
+      />
+
+      @if (sucesso(); as mensagem) {
+        <app-aviso tipo="sucesso">{{ mensagem }}</app-aviso>
+      }
+      @if (erroGeral(); as mensagem) {
+        <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+      }
+
+      <button appBotao type="submit" class="w-full" [disabled]="enviando()">
+        {{ enviando() ? 'ENVIANDO…' : 'ENVIAR LINK' }}
+      </button>
+    </form>
+
+    <p class="m-0 flex w-full justify-center">
+      <a appLink routerLink="/entrar">Voltar para Login</a>
+    </p>
+  </app-janela>
+</app-tela-auth>

@@ -1,10 +1,9 @@
-<div class="flex h-screen flex-col">
-  <!-- Wallpaper (área de trabalho) -->
-  <main class="relative flex flex-1 items-center justify-center overflow-hidden bg-win-wallpaper">
-    @if (drawOpen()) {
-      <app-draw-window (closed)="drawOpen.set(false)" />
-    }
+<div
+  class="flex h-screen flex-col bg-linear-to-b from-(--cor-fundo-app-topo) to-(--cor-fundo-app-base)"
+>
+  <main class="relative flex min-h-0 flex-1 flex-col overflow-auto">
+    <router-outlet />
   </main>
 
-  <app-taskbar [drawOpen]="drawOpen()" (drawClick)="drawOpen.set(true)" />
+  <app-barra-de-tarefas (sair)="sair()" />
 </div>

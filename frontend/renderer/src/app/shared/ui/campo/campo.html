@@ -1,0 +1,36 @@
+<label
+  class="texto-rotulo"
+  [for]="id"
+  [class]="desabilitado() ? 'text-texto-desabilitado' : 'text-texto-padrao'"
+>
+  {{ rotulo() }}
+</label>
+
+<div [class]="classesCaixa()">
+  @if (icone(); as nome) {
+    <app-icone [nome]="nome" />
+  }
+  <input
+    class="min-w-0 flex-1 border-0 bg-transparent p-0 texto-corpo text-texto-padrao outline-none placeholder:text-texto-secundario disabled:text-texto-desabilitado"
+    [id]="id"
+    [type]="tipo()"
+    [placeholder]="placeholder()"
+    [autocomplete]="autocomplete()"
+    [value]="valor()"
+    [disabled]="desabilitado()"
+    [attr.aria-invalid]="erro() ? true : null"
+    [attr.aria-describedby]="erro() || ajuda() ? id + '-ajuda' : null"
+    (input)="digitar($event)"
+    (focus)="focado.set(true)"
+    (blur)="sair()"
+  />
+</div>
+
+@if (erro(); as mensagem) {
+  <p [id]="id + '-ajuda'" class="m-0 flex items-center gap-e1 texto-corpo-pequeno text-texto-erro">
+    <app-icone nome="alerta" [tamanho]="14" />
+    {{ mensagem }}
+  </p>
+} @else if (ajuda(); as texto) {
+  <p [id]="id + '-ajuda'" class="m-0 texto-corpo-pequeno text-texto-secundario">{{ texto }}</p>
+}
