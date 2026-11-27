@@ -18,4 +18,12 @@ export const AUTH_ROUTES: Routes = [
     loadComponent: () =>
       import('./pages/esqueci-senha/esqueci-senha').then((m) => m.EsqueciSenha),
   },
+  {
+    path: 'redefinir-senha',
+    title: 'Redefinir senha · Clube do Disquete',
+    loadComponent: () =>
+      import('./pages/redefinir-senha/redefinir-senha').then(
+        (m) => m.RedefinirSenha,
+      ),
+  },
 ];

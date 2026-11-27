@@ -87,12 +87,12 @@ JWT_RESET_EXPIRES_MINUTES = int(os.getenv('JWT_RESET_EXPIRES_MINUTES', '30'))
 # define o identificador publico do aplicativo Google para validacao do login social
 GOOGLE_CLIENT_ID = os.getenv('GOOGLE_CLIENT_ID', '')
 
-# configura o servico de envio de emails e o endereco de destino no frontend para redefinicao de senha
+# configura o servico de envio de emails e o endereco de destino no frontend para redefinicao de senha (o angular usa rotas com hash, por isso o "#/")
 EMAIL_BACKEND = os.getenv('EMAIL_BACKEND', 'django.core.mail.backends.console.EmailBackend')
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'noreply@clubedodisquete.local')
 FRONTEND_RESET_PASSWORD_URL = os.getenv(
     'FRONTEND_RESET_PASSWORD_URL',
-    'http://localhost:4200/redefinir-senha'
+    'http://localhost:4200/#/redefinir-senha'
 )
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'localhost')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', '587'))

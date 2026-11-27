@@ -17,6 +17,12 @@ export interface DadosCadastro {
   termos_aceitos: boolean;
 }
 
+export interface DadosRedefinicao {
+  token: string;
+  nova_senha: string;
+  confirmacao_senha: string;
+}
+
 interface RespostaSessao {
   token: string;
   usuario: Usuario;
@@ -49,6 +55,13 @@ export class AuthApi {
     return this.http.post<RespostaDetalhe>(`${this.url}/recuperar-senha/`, {
       email,
     });
+  }
+
+  redefinirSenha(dados: DadosRedefinicao): Observable<RespostaDetalhe> {
+    return this.http.post<RespostaDetalhe>(
+      `${this.url}/redefinir-senha/`,
+      dados,
+    );
   }
 
   /** Avisa o backend e limpa a sessao local mesmo se a chamada falhar. */
