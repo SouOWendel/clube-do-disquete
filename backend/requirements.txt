@@ -1,4 +1,4 @@
-# define as dependencias do backend. inclui o Django, a extensao rest, o conector com PostgreSQL e o suporte a cors, ambiente, tokens jwt e autenticacao com Google
+# define as dependencias do backend. inclui o Django, a extensao rest, o conector com PostgreSQL e o suporte a cors, ambiente, tokens jwt e autenticacao com Google, alem do cliente Redis usado pelo cache
 Django>=5.1,<6.0
 djangorestframework>=3.15,<4.0
 psycopg[binary]>=3.2,<4.0
@@ -7,3 +7,4 @@ python-dotenv>=1.0,<2.0
 PyJWT>=2.9,<3.0
 google-auth>=2.35,<3.0
 requests>=2.32,<3.0
+redis>=5.0,<7.0

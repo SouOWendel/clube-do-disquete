@@ -1,7 +1,7 @@
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from core.models import Usuario
-from usuarios.services import decodificar_token_acesso
+from usuarios.services import decodificar_token_acesso, token_acesso_revogado
 
 
 # extrai e valida o token bearer jwt do cabecalho authorization para identificar o usuario da requisicao
@@ -24,6 +24,9 @@ class JWTAuthentication(BaseAuthentication):
             payload = decodificar_token_acesso(token)
         except ValueError as exc:
             raise AuthenticationFailed(str(exc)) from exc
+
+        if token_acesso_revogado(token):
+            raise AuthenticationFailed('Sessão encerrada. Entre novamente.')
 
         id_usuario = payload.get('sub')
         usuario = Usuario.objects.filter(id_usuario=id_usuario).first()

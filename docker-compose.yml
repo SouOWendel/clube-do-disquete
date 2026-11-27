@@ -1,6 +1,7 @@
 # sobe o PostgreSQL de desenvolvimento com o banco disquete_db ja criado.
 # na primeira inicializacao (volume vazio) o schema e as categorias iniciais
-# sao aplicados automaticamente a partir de database/002_create_schema.sql
+# sao aplicados automaticamente a partir de database/002_create_schema.sql.
+# sobe tambem o Redis, usado pelo Django para guardar os tokens revogados no logout
 services:
   postgres:
     image: postgres:17
@@ -16,6 +17,17 @@ services:
       - ./database/002_create_schema.sql:/docker-entrypoint-initdb.d/002_create_schema.sql:ro
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U postgres -d disquete_db']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: disquete-redis
+    ports:
+      - '6379:6379'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 5s
       timeout: 5s
       retries: 10

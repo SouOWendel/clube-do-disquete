@@ -1,8 +1,10 @@
 import hashlib
 import re
+import uuid
 from datetime import datetime, timedelta, timezone
 import jwt
 from django.conf import settings
+from django.core.cache import cache
 from django.core.mail import send_mail
 from google.auth.transport import requests as google_requests
 from google.oauth2 import id_token as google_id_token
@@ -18,6 +20,8 @@ def gerar_token_acesso(usuario: Usuario) -> str:
         'email': usuario.email,
         'nome_usuario': usuario.nome_usuario,
         'tipo': 'acesso',
+        # identificador unico: dois logins no mesmo segundo geram tokens diferentes, e o logout de um nao derruba o outro
+        'jti': uuid.uuid4().hex,
         'iat': agora,
         'exp': expiracao
     }
@@ -41,6 +45,24 @@ def decodificar_token_acesso(token: str) -> dict:
         raise ValueError('Tipo de token invalido para autenticacao.')
 
     return payload
+
+
+# monta a chave do cache que marca um token de acesso como revogado.
+# usa o hash do proprio token para nao guardar o jwt em texto puro e para valer tambem para tokens emitidos antes desta regra
+def _chave_token_revogado(token: str) -> str:
+    return f'jwt-revogado:{hashlib.sha256(token.encode("utf-8")).hexdigest()}'
+
+
+# revoga o token de acesso no logout, guardando a marca apenas ate o token expirar sozinho
+def revogar_token_acesso(token: str, payload: dict) -> None:
+    segundos_restantes = int(payload['exp']) - int(datetime.now(timezone.utc).timestamp())
+    if segundos_restantes > 0:
+        cache.set(_chave_token_revogado(token), True, timeout=segundos_restantes)
+
+
+# informa se o token de acesso foi revogado por um logout anterior
+def token_acesso_revogado(token: str) -> bool:
+    return cache.get(_chave_token_revogado(token)) is not None
 
 
 # gera uma impressao curta do hash da senha atual para invalidar automaticamente o token de recuperacao apos o uso

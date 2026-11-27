@@ -19,7 +19,7 @@ O módulo de autenticação do **Clube do Disquete** está implementado no aplic
 | `POST` | `/api/auth/recuperar-senha/` | Pública          | Inicia a recuperação de senha por e-mail sem expor se a conta existe.         |
 | `POST` | `/api/auth/redefinir-senha/` | Pública          | Valida o token temporário e atualiza a senha do usuário.                      |
 | `GET`  | `/api/auth/me/`              | `Bearer <token>` | Retorna o perfil do usuário autenticado.                                      |
-| `POST` | `/api/auth/logout/`          | `Bearer <token>` | Confirma o encerramento da sessão no cliente.                                 |
+| `POST` | `/api/auth/logout/`          | `Bearer <token>` | Revoga o token usado na requisição (guardado no Redis até expirar).           |
 
 ## Como Testar Localmente (Windows PowerShell)
 
@@ -76,4 +76,5 @@ O módulo de autenticação do **Clube do Disquete** está implementado no aplic
   }
   ```
 - **Falha de Autenticação ou Token Ausente/Inválido:** Qualquer rota protegida (`/api/auth/me/`, `/api/auth/logout/`) chamada sem cabeçalho `Authorization: Bearer <token>` válido retorna **HTTP `401 Unauthorized`**.
+- **Token Revogado no Logout:** Depois de `POST /api/auth/logout/`, o mesmo token passa a receber **HTTP `401 Unauthorized`** (`Sessão encerrada. Entre novamente.`) em qualquer rota protegida. Outras sessões do mesmo usuário continuam válidas. A revogação fica no Redis (`REDIS_URL`) apenas até o token expirar; com o Redis fora do ar, as rotas protegidas respondem **HTTP `500`** em vez de aceitar um token possivelmente revogado.
 - **Reutilização do Token de Recuperação:** Após concluir `POST /api/auth/redefinir-senha/`, uma segunda tentativa com o mesmo token retorna **HTTP `400 Bad Request`** informando que o token já foi utilizado ou invalidado.
