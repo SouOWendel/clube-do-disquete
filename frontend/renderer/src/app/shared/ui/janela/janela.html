@@ -1,5 +1,9 @@
 <header
-  class="flex w-full items-center gap-e2 bg-linear-to-r from-(--cor-barra-topo) to-(--cor-barra-base) px-e3 py-e2 text-texto-inverso"
+  class="barra-de-titulo flex w-full items-center gap-e2 bg-linear-to-r from-(--cor-barra-topo) to-(--cor-barra-base) px-e3 py-e2 text-texto-inverso"
+  (pointerdown)="iniciarArraste($event)"
+  (pointermove)="arrastar($event)"
+  (pointerup)="soltar($event)"
+  (pointercancel)="soltar($event)"
 >
   @if (icone(); as nome) {
     <app-icone [nome]="nome" />
@@ -9,7 +13,7 @@
   @if (controles() !== 'nenhum') {
     <div class="flex items-start gap-e1">
       @if (controles() === 'todos') {
-        <button type="button" class="controle" aria-label="Minimizar" (click)="minimizar.emit()">
+        <button type="button" class="controle" aria-label="Minimizar" (click)="aoMinimizar()">
           <app-icone nome="minimizar" [tamanho]="16" />
         </button>
         <button type="button" class="controle" aria-label="Maximizar" (click)="maximizar.emit()">
