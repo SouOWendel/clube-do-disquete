@@ -33,7 +33,7 @@
   <!-- Respostas -->
   <app-janela class="w-full" [titulo]="'RESPOSTAS (' + respostas().length + ')'" icone="email" corpo="">
     @for (r of respostas(); track r.id_resposta) {
-      <app-item-de-resposta [resposta]="r" />
+      <app-item-de-resposta [resposta]="r" (excluir)="confirmarExclusaoDaResposta(r)" />
     } @empty {
       <p class="m-0 w-full px-e4 py-e3 texto-corpo text-texto-secundario">
         Nenhuma resposta ainda. Seja o primeiro a ajudar!
@@ -78,6 +78,30 @@
       </button>
       <button appBotao estilo="perigo" type="button" [disabled]="excluindo()" (click)="excluir()">
         {{ excluindo() ? 'EXCLUINDO…' : 'EXCLUIR' }}
+      </button>
+    </div>
+  </app-dialogo>
+
+  <!-- Confirmar exclusao de resposta -->
+  <app-dialogo
+    titulo="EXCLUIR RESPOSTA?"
+    icone="lixeira"
+    [aberto]="respostaParaExcluir() !== null"
+    (fechar)="cancelarExclusaoDaResposta()"
+  >
+    <app-aviso tipo="erro">Esta ação não pode ser desfeita.</app-aviso>
+    <p class="m-0 w-full texto-corpo text-texto-padrao">
+      Sua resposta "{{ trechoDaResposta() }}" será excluída permanentemente.
+    </p>
+    @if (erroExclusaoResposta(); as mensagem) {
+      <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+    }
+    <div class="flex w-full justify-end gap-e3">
+      <button appBotao estilo="secundario" type="button" (click)="cancelarExclusaoDaResposta()">
+        CANCELAR
+      </button>
+      <button appBotao estilo="perigo" type="button" [disabled]="excluindoResposta()" (click)="excluirResposta()">
+        {{ excluindoResposta() ? 'EXCLUINDO…' : 'EXCLUIR' }}
       </button>
     </div>
   </app-dialogo>
