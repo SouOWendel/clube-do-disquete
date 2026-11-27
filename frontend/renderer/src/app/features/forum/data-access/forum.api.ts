@@ -64,4 +64,11 @@ export class ForumApi {
       { corpo },
     );
   }
+
+  /** So o autor pode excluir (o backend responde 403 para os outros). */
+  excluirResposta(idTopico: number, idResposta: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.url}/topicos/${idTopico}/respostas/${idResposta}/`,
+    );
+  }
 }
