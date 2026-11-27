@@ -30,8 +30,8 @@ clube-do-disquete/
 │   ├── vite.main.config.mts         # Build do processo principal (Vite)
 │   └── package.json                 # Scripts de desenvolvimento, lint e empacotamento
 ├── backend/
-│   ├── config/                      # Configurações centrais do Django, DRF, CORS, JWT e e-mail
-│   ├── core/                        # Models mapeados (managed = False), autenticação JWT e rotas base
+│   ├── config/                      # Configurações centrais do Django, DRF, CORS, JWT e e-mail; asgi.py junta a API e o Socket.IO
+│   ├── core/                        # Models mapeados (managed = False), autenticação JWT, rotas base e tempo real (Socket.IO)
 │   ├── respostas/                   # Listagem, criação e exclusão de respostas dos tópicos
 │   ├── topicos/                     # Listagem de categorias e operações de feed e tópicos
 │   ├── usuarios/                    # Fluxos de cadastro, login JWT, Google e recuperação de senha
@@ -45,14 +45,15 @@ clube-do-disquete/
 │   ├── auth-usuario.md              # Documentação dos endpoints e fluxos de autenticação
 │   ├── categoria-topico.md          # Documentação dos endpoints de categorias, feed e tópicos
 │   ├── database.md                  # Documentação geral da modelagem e funcionamento do banco
-│   └── django-setup.md              # Documentação de arquitetura e execução do backend Django
+│   ├── django-setup.md              # Documentação de arquitetura e execução do backend Django
+│   └── tempo-real.md                # Socket.IO: arquitetura, autenticação e eventos de tempo real
 ├── .gitignore                       # Regras do Git para ignorar arquivos locais e temporários
 └── README.md                        # Visão geral do projeto e estrutura de diretórios
 ```
 
 ## Como Rodar
 
-- **Banco de dados e Redis:** `docker compose up -d` na raiz sobe o PostgreSQL (com o schema aplicado) e o Redis, que guarda os tokens revogados no logout. Sem Docker, execute os scripts de `database/` na ordem (veja [docs/database.md](docs/database.md)) e aponte `REDIS_URL` para um Redis local.
+- **Banco de dados e Redis:** `docker compose up -d` na raiz sobe o PostgreSQL (com o schema aplicado) e o Redis, que guarda os tokens revogados no logout e distribui os eventos do Socket.IO. Sem Docker, execute os scripts de `database/` na ordem (veja [docs/database.md](docs/database.md)) e aponte `REDIS_URL` para um Redis local.
 - **Backend:** dentro de `backend/`, siga [docs/django-setup.md](docs/django-setup.md).
 - **Frontend (desktop):**
 
@@ -66,3 +67,4 @@ clube-do-disquete/
 
 - **Autenticação e Usuários:** contratos das rotas de conta e sessão em [docs/auth-usuario.md](docs/auth-usuario.md).
 - **Categorias, Feed e Tópicos:** endpoints de categorias, listagem do feed e CRUD de tópicos em [docs/categoria-topico.md](docs/categoria-topico.md).
+- **Tempo Real:** eventos Socket.IO de tópicos e respostas em [docs/tempo-real.md](docs/tempo-real.md).
