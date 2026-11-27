@@ -1,0 +1,58 @@
+@if (rotulo(); as texto) {
+  <span [id]="id + '-rotulo'" [class]="classesRotulo()">{{ texto }}</span>
+}
+
+<div class="relative w-full">
+<button
+  type="button"
+  role="combobox"
+  class="cursor-pointer items-center text-left outline-none"
+  [class]="classesCaixa()"
+  [id]="id"
+  [disabled]="desabilitado()"
+  [attr.aria-labelledby]="rotulo() ? id + '-rotulo' : null"
+  [attr.aria-expanded]="aberto()"
+  [attr.aria-controls]="id + '-opcoes'"
+  [attr.aria-activedescendant]="aberto() && ativa() >= 0 ? id + '-opcao-' + ativa() : null"
+  [attr.aria-invalid]="erro() ? true : null"
+  (click)="alternar()"
+  (keydown)="teclar($event)"
+  (focus)="focado.set(true)"
+  (blur)="sairDoBotao()"
+>
+  <span
+    class="min-w-0 flex-1 texto-corpo"
+    [class]="selecionada() ? 'text-texto-padrao' : 'text-texto-secundario'"
+  >
+    {{ selecionada()?.rotulo ?? placeholder() }}
+  </span>
+  <app-icone nome="seta-baixo" class="text-texto-padrao" />
+</button>
+
+@if (aberto()) {
+  <ul
+    role="listbox"
+    class="absolute top-full left-0 z-20 m-0 flex w-full list-none flex-col border border-solid border-borda-padrao bg-fundo-superficie p-0"
+    [id]="id + '-opcoes'"
+  >
+    @for (opcao of opcoes(); track opcao.valor; let i = $index) {
+      <li
+        role="option"
+        class="cursor-pointer px-e3 py-e2 texto-corpo"
+        [id]="id + '-opcao-' + i"
+        [attr.aria-selected]="opcao.valor === valor()"
+        [class]="i === ativa() ? 'bg-acao-primaria text-texto-inverso' : 'text-texto-padrao hover:bg-fundo-hover'"
+        (mouseenter)="ativa.set(i)"
+        (mousedown)="$event.preventDefault()"
+        (click)="escolher(opcao)"
+      >
+        {{ opcao.rotulo }}
+      </li>
+    }
+  </ul>
+}
+</div>
+
+@if (erro() || ajuda()) {
+  <app-mensagem-de-ajuda [erro]="erro()" [ajuda]="ajuda()" />
+}

@@ -1,0 +1,74 @@
+<!-- Iniciar -->
+<a
+  routerLink="/"
+  class="flex shrink-0 items-center border-2 border-solid border-borda-padrao bg-fundo-superficie px-e2 py-e1 sombra-botao active:shadow-none"
+  aria-label="Início"
+>
+  <app-logo [largura]="91.459" />
+</a>
+
+<span class="h-8 w-0.5 shrink-0 bg-borda-sutil" aria-hidden="true"></span>
+
+<!-- Abas internas -->
+<nav class="flex h-9 min-w-0 flex-1 items-center gap-e2 overflow-hidden" aria-label="Janelas abertas">
+  @if (sessao.logado()) {
+    <app-aba nome="Tópicos" icone="pasta" rota="/" [ativa]="!abaAtual()" />
+    @if (abaAtual(); as aba) {
+      <app-aba
+        [nome]="aba.nome"
+        [icone]="aba.icone"
+        [rota]="aba.url"
+        [ativa]="true"
+        [fechavel]="true"
+        (fechar)="fecharAba()"
+      />
+    }
+  }
+
+  <!-- Janelas minimizadas: clicar restaura (vale tambem nas telas de login) -->
+  @for (janela of janelas.minimizadas(); track janela.id) {
+    <button
+      type="button"
+      class="flex w-[180px] min-w-[96px] shrink cursor-pointer items-center gap-e2 border-2 border-solid border-borda-padrao bg-fundo-sutil px-e3 py-e2 text-texto-padrao sombra-botao hover:bg-fundo-hover focus-visible:border-dashed focus-visible:outline-none"
+      [attr.aria-label]="'Restaurar ' + janela.titulo()"
+      [title]="janela.titulo()"
+      (click)="janela.restaurar()"
+    >
+      <app-icone [nome]="janela.icone() ?? 'grade'" [tamanho]="16" class="text-texto-destaque" />
+      <span class="min-w-0 flex-1 truncate text-left texto-corpo-pequeno">{{ janela.titulo() }}</span>
+    </button>
+  }
+</nav>
+
+<span class="shrink-0 texto-rotulo text-texto-inverso" aria-hidden="true">C:\&gt;</span>
+
+<label
+  class="flex w-[260px] shrink-0 items-center gap-e2 border border-solid border-borda-padrao bg-fundo-superficie p-e2 text-texto-destaque"
+>
+  <app-icone nome="busca" [tamanho]="16" />
+  <input
+    #busca
+    type="search"
+    class="min-w-0 flex-1 border-0 bg-transparent p-0 texto-corpo-pequeno text-texto-padrao outline-none placeholder:text-texto-secundario"
+    placeholder="Buscar tópicos…"
+    aria-label="Buscar tópicos"
+    [disabled]="!sessao.logado()"
+    (keydown.enter)="buscar(busca.value)"
+    (search)="buscar(busca.value)"
+  />
+</label>
+
+@if (sessao.usuario(); as usuario) {
+  <span
+    class="flex shrink-0 items-center gap-e2 border border-solid border-borda-sutil bg-fundo-sutil px-e3 py-e2 texto-rotulo-pequeno text-texto-padrao"
+  >
+    <app-icone nome="usuario" [tamanho]="16" />
+    {{ usuario.nome_usuario }}
+  </span>
+  <button appBotao estilo="secundario" type="button" (click)="sair.emit()">
+    <app-icone nome="sair" [tamanho]="16" />
+    SAIR
+  </button>
+} @else {
+  <a appBotao estilo="secundario" routerLink="/entrar">ENTRAR</a>
+}

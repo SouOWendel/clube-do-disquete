@@ -1,0 +1,1 @@
+# marca o diretorio 'usuario' como um pacote Python que concentra os fluxos de autenticacao e conta

@@ -1,0 +1,92 @@
+@if (dados(); as t) {
+  <app-titulo-de-pagina>C:\FÓRUM\{{ nomeCategoria() }}</app-titulo-de-pagina>
+
+  <!-- Topico -->
+  <app-janela
+    class="w-full"
+    [titulo]="'TÓPICO :: ' + nomeCategoria()"
+    [icone]="icone()"
+    corpo="p-e4 gap-e3"
+    (fechar)="voltarAoFeed()"
+  >
+    <div class="flex w-full items-center gap-e2">
+      <app-tag-categoria>{{ t.categoria.nome }}</app-tag-categoria>
+      <span class="flex-1"></span>
+      @if (t.autoria) {
+        <a appBotao estilo="secundario" [routerLink]="['/topicos', t.id_topico, 'editar']">
+          <app-icone nome="editar" [tamanho]="16" />
+          EDITAR
+        </a>
+        <button appBotao estilo="secundario" type="button" (click)="confirmandoExclusao.set(true)">
+          <app-icone nome="lixeira" [tamanho]="16" />
+          EXCLUIR
+        </button>
+      }
+    </div>
+    <h2 class="m-0 texto-titulo-secao text-texto-padrao">{{ t.titulo }}</h2>
+    <p class="m-0 texto-corpo-pequeno text-texto-secundario">
+      por {{ t.autor.nome_usuario }} · {{ t.criado_em | date: 'dd/MM, HH:mm' }}
+    </p>
+    <p class="m-0 w-full texto-corpo whitespace-pre-line text-texto-padrao">{{ t.corpo }}</p>
+  </app-janela>
+
+  <!-- Respostas -->
+  <app-janela class="w-full" [titulo]="'RESPOSTAS (' + respostas().length + ')'" icone="email" corpo="">
+    @for (r of respostas(); track r.id_resposta) {
+      <app-item-de-resposta [resposta]="r" />
+    } @empty {
+      <p class="m-0 w-full px-e4 py-e3 texto-corpo text-texto-secundario">
+        Nenhuma resposta ainda. Seja o primeiro a ajudar!
+      </p>
+    }
+  </app-janela>
+
+  <!-- Responder -->
+  <app-janela class="w-full" titulo="RESPONDER" icone="enviar" corpo="p-e4 gap-e3">
+    <form class="flex w-full flex-col gap-e3" [formGroup]="formResposta" (ngSubmit)="responder()">
+      <app-area-de-texto
+        formControlName="corpo"
+        placeholder="Escreva sua mensagem..."
+        ajuda="Máximo de 10.000 caracteres."
+        [limite]="LIMITE_RESPOSTA"
+        [erro]="erroResposta()"
+      />
+      <div class="flex w-full justify-end">
+        <button appBotao type="submit" [disabled]="enviando()">
+          <app-icone nome="enviar" [tamanho]="16" />
+          {{ enviando() ? 'ENVIANDO…' : 'ENVIAR' }}
+        </button>
+      </div>
+    </form>
+  </app-janela>
+
+  <!-- Confirmar exclusao -->
+  <app-dialogo
+    titulo="EXCLUIR TÓPICO?"
+    icone="lixeira"
+    [aberto]="confirmandoExclusao()"
+    (fechar)="confirmandoExclusao.set(false)"
+  >
+    <app-aviso tipo="erro">Esta ação não pode ser desfeita.</app-aviso>
+    <p class="m-0 w-full texto-corpo text-texto-padrao">{{ textoExclusao() }}</p>
+    @if (erroExclusao(); as mensagem) {
+      <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+    }
+    <div class="flex w-full justify-end gap-e3">
+      <button appBotao estilo="secundario" type="button" (click)="confirmandoExclusao.set(false)">
+        CANCELAR
+      </button>
+      <button appBotao estilo="perigo" type="button" [disabled]="excluindo()" (click)="excluir()">
+        {{ excluindo() ? 'EXCLUINDO…' : 'EXCLUIR' }}
+      </button>
+    </div>
+  </app-dialogo>
+} @else if (erroAoCarregar(); as mensagem) {
+  <app-titulo-de-pagina>C:\FÓRUM\TÓPICO</app-titulo-de-pagina>
+  <app-janela class="w-full" titulo="TÓPICO" icone="alerta" corpo="p-e4 gap-e4" (fechar)="voltarAoFeed()">
+    <app-aviso tipo="erro">{{ mensagem }}</app-aviso>
+    <a appBotao estilo="secundario" routerLink="/">VOLTAR AO FEED</a>
+  </app-janela>
+} @else {
+  <p class="m-0 texto-corpo text-texto-inverso">Carregando tópico…</p>
+}

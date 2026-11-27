@@ -1,28 +1,49 @@
-# Angular specific
-/dist/
-/out-tsc/
-/tmp/
-/coverage/
-/e2e/test-output/
-/.angular/
-.angular/
+# ── Dependências ─────────────────────────────
+node_modules/
 
-# Node modules and dependency files
-/node_modules/
-/package-lock.json
-/yarn.lock
-
-# Environment files
-/.env
-
-# Angular CLI and build artefacts
-/.angular-cli.json
-/.ng/
-
-# TypeScript cache
+# ── Builds ───────────────────────────────────
+# Electron Forge: app empacotado e instaladores
+out/
+# Vite: build do processo principal e do preload
+.vite/
+# Angular: build e cache
+frontend/renderer/dist/
+frontend/renderer/.angular/
 *.tsbuildinfo
 
-# Logs
+# ── Logs ─────────────────────────────────────
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# ── Variáveis de ambiente ───────────────────
+.env
+.env.*
+!.env.example
+
+# ── Python (backend) ─────────────────────────
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyd
+
+# ── Caches de ferramentas ────────────────────
+.oxlintcache
+coverage/
+
+# ── Claude Code (configurações pessoais) ─────
+.claude/settings.local.json
+
+# ── Editores ─────────────────────────────────
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# ── Sistema operacional ──────────────────────
+Thumbs.db
+desktop.ini
+.DS_Store

@@ -1,0 +1,1 @@
+# marca o diretorio respostas como um pacote Python para organizar os fluxos de comentarios dos topicos

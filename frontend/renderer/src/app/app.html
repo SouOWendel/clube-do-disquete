@@ -1,0 +1,12 @@
+<div
+  class="flex h-screen flex-col bg-linear-to-b from-(--cor-fundo-app-topo) to-(--cor-fundo-app-base)"
+>
+  <!-- isolate: as camadas (z-index) das janelas arrastadas ficam abaixo dos avisos e da barra de tarefas -->
+  <main class="relative isolate flex min-h-0 flex-1 flex-col overflow-auto">
+    <router-outlet />
+  </main>
+
+  <app-barra-de-tarefas (sair)="sair()" />
+</div>
+
+<app-painel-de-notificacoes />
