@@ -1,5 +1,6 @@
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound, PermissionDenied
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from core.models import Resposta, Topico
@@ -8,6 +9,8 @@ from .serializers import RespostaEscritaSerializer, RespostaLeituraSerializer
 
 # lista as respostas de um topico em ordem cronologica e permite publicar novas respostas
 class RespostaListaCriacaoView(generics.ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+
     # busca o topico pela chave primaria ou retorna erro 404 caso nao exista
     def obter_topico(self):
         id_topico = self.kwargs['id_topico']
@@ -51,6 +54,8 @@ class RespostaListaCriacaoView(generics.ListCreateAPIView):
 
 # exclui uma resposta especifica de um topico validando a permissao de autoria
 class RespostaExclusaoView(APIView):
+    permission_classes = [IsAuthenticated]
+
     # verifica se o topico e a resposta existem, valida se o usuario autenticado é o autor e remove o registro
     def delete(self, request, id_topico: int, id_resposta: int):
         if not Topico.objects.filter(pk=id_topico).exists():
