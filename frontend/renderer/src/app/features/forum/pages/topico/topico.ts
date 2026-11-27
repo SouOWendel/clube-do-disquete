@@ -185,6 +185,47 @@ export class PaginaTopico {
     });
   }
 
+  // Excluir resposta (so o autor ve a lixeira)
+  protected readonly respostaParaExcluir = signal<Resposta | null>(null);
+  protected readonly excluindoResposta = signal(false);
+  protected readonly erroExclusaoResposta = signal<string | null>(null);
+
+  protected readonly trechoDaResposta = computed(() => {
+    const corpo = this.respostaParaExcluir()?.corpo ?? '';
+    return corpo.length > 60 ? `${corpo.slice(0, 60).trimEnd()}…` : corpo;
+  });
+
+  protected confirmarExclusaoDaResposta(resposta: Resposta): void {
+    this.erroExclusaoResposta.set(null);
+    this.respostaParaExcluir.set(resposta);
+  }
+
+  protected cancelarExclusaoDaResposta(): void {
+    if (this.excluindoResposta()) return;
+    this.respostaParaExcluir.set(null);
+  }
+
+  protected excluirResposta(): void {
+    const resposta = this.respostaParaExcluir();
+    if (!resposta || this.excluindoResposta()) return;
+
+    this.excluindoResposta.set(true);
+    this.erroExclusaoResposta.set(null);
+    this.api.excluirResposta(this.id(), resposta.id_resposta).subscribe({
+      next: () => {
+        this.excluindoResposta.set(false);
+        this.respostaParaExcluir.set(null);
+        // os outros usuarios recebem a remocao pelo evento resposta_excluida
+        this.excluidas.update((ids) => new Set(ids).add(resposta.id_resposta));
+        this.notificacoes.mostrar('Resposta excluída.', 'sucesso');
+      },
+      error: (erro: unknown) => {
+        this.excluindoResposta.set(false);
+        this.erroExclusaoResposta.set(mensagemGeral(erro));
+      },
+    });
+  }
+
   protected voltarAoFeed(): void {
     this.router.navigateByUrl('/');
   }
