@@ -53,15 +53,90 @@ clube-do-disquete/
 
 ## Como Rodar
 
-- **Banco de dados e Redis:** `docker compose up -d` na raiz sobe o PostgreSQL (com o schema aplicado) e o Redis, que guarda os tokens revogados no logout e distribui os eventos do Socket.IO. Sem Docker, execute os scripts de `database/` na ordem (veja [docs/database.md](docs/database.md)) e aponte `REDIS_URL` para um Redis local.
-- **Backend:** dentro de `backend/`, siga [docs/django-setup.md](docs/django-setup.md).
-- **Frontend (desktop):**
+### Pré-requisitos
 
-  ```bash
-  cd frontend
-  npm install   # também instala as dependências do Angular em renderer/
-  npm start     # sobe o Angular (porta 4200) e abre o Electron
-  ```
+- Docker (com Docker Compose), para o PostgreSQL e o Redis.
+- Python 3.10 ou mais recente, para o backend Django.
+- Node.js 22 ou 24 (exigência do Angular), para o frontend e o Electron.
+
+### 1. Banco de dados e Redis
+
+Na raiz do projeto:
+
+```bash
+docker compose up -d
+```
+
+Sobe o PostgreSQL (`disquete_db`, com o schema e as categorias aplicados na primeira vez) na porta 5432 e o Redis na porta 6379. O Redis guarda os tokens revogados no logout e distribui os eventos de tempo real. Sem Docker, execute os scripts de `database/` na ordem (veja [docs/database.md](docs/database.md)) e aponte `REDIS_URL` para um Redis local.
+
+### 2. Backend (API + Socket.IO)
+
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate        # Windows (PowerShell): .venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+cp .env.example .env
+```
+
+No `.env`, preencha `DJANGO_SECRET_KEY` e `JWT_SECRET_KEY` com valores aleatórios e use `DB_PASSWORD=postgres` (a senha do `docker-compose.yml`). Para gerar uma chave:
+
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(50))"
+```
+
+Depois inicie o servidor (não é preciso rodar `migrate`):
+
+```bash
+python manage.py runserver
+```
+
+A API e o Socket.IO ficam em `http://127.0.0.1:8000`. Para conferir, `http://127.0.0.1:8000/api/health/` deve responder `{"status": "ok", "database": "connected", "categorias_carregadas": 6}`. Mais detalhes em [docs/django-setup.md](docs/django-setup.md).
+
+### 3. Frontend (desktop)
+
+Em outro terminal:
+
+```bash
+cd frontend
+npm install   # também instala as dependências do Angular em renderer/
+npm start     # sobe o Angular (porta 4200) e abre o Electron
+```
+
+Na primeira vez, crie uma conta em **Criar agora**. Os e-mails de recuperação de senha não são enviados de verdade em desenvolvimento: o link aparece no terminal do Django.
+
+> Se você rodar `npm install` com o `npm start` ligado, reinicie o `npm start`. Senão o Vite pode carregar duas cópias do Angular e a tela quebra com o erro `NG0203`.
+
+## Testar com Dois Usuários ao Mesmo Tempo
+
+Cada Electron guarda a sessão (o token de login) na sua pasta de perfil. Duas janelas do mesmo perfil dividem o mesmo login, então para ter dois usuários é preciso abrir um segundo Electron com outra pasta de perfil.
+
+1. Com o backend e o `npm start` rodando (passos 2 e 3), o primeiro Electron já está aberto. Entre com o primeiro usuário.
+2. Em outro terminal, abra o segundo Electron com um perfil separado:
+
+   ```bash
+   cd frontend
+   npx electron . --user-data-dir=/tmp/clube-do-disquete-usuario-2
+   ```
+
+   No Windows (PowerShell):
+
+   ```powershell
+   cd frontend
+   npx electron . --user-data-dir="$env:TEMP\clube-do-disquete-usuario-2"
+   ```
+
+   Ele usa o Angular que o `npm start` já subiu na porta 4200, então não é preciso rodar outro `npm start`. Mantenha a mesma pasta para continuar logado nas próximas vezes; para um terceiro usuário, use outra pasta.
+
+3. No segundo Electron, crie outra conta (ou entre com ela).
+4. Coloque as duas janelas lado a lado e teste o tempo real (detalhes em [docs/tempo-real.md](docs/tempo-real.md)):
+   - **Novo tópico:** publique num Electron; no outro, ele aparece no feed com o selo `NOVO`, sem recarregar.
+   - **Respostas:** abra o mesmo tópico nos dois e responda num deles; a resposta entra no outro e o contador `RESPOSTAS (N)` sobe. No feed, o `RESP.` também atualiza.
+   - **Edição:** edite o tópico pelo autor; o outro vê o título e o texto novos.
+   - **Exclusão:** exclua o tópico pelo autor; quem estava com ele aberto vê "Este tópico foi excluído pelo autor." e volta ao feed.
+   - **Permissões:** os botões **EDITAR** e **EXCLUIR** só aparecem para o autor.
+
+Também dá para usar o navegador como segundo usuário, abrindo `http://localhost:4200` (no navegador o login fica no perfil dele, separado do Electron).
 
 ## Documentação
 
