@@ -17,6 +17,8 @@ ALLOWED_HOSTS = [
 
 # mantem apenas os aplicativos essenciais para a api sem estado, evitando a criacao de tabelas internas do Django no banco
 INSTALLED_APPS = [
+    # o daphne precisa vir primeiro para o runserver servir a aplicacao asgi (api rest + socket.io)
+    'daphne',
     'corsheaders',
     'rest_framework',
     'core',
@@ -33,6 +35,9 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+# aplicacao asgi que junta o django e o servidor socket.io de tempo real
+ASGI_APPLICATION = 'config.asgi.application'
 
 TEMPLATES = []
 

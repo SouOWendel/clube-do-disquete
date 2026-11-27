@@ -1,12 +1,15 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
+import { rxResource, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { debounceTime, merge, tap } from 'rxjs';
 import { mensagemDoErro, valorDe } from '../../../../core/api/recurso';
+import { TempoReal } from '../../../../core/tempo-real/tempo-real';
 import { Aviso } from '../../../../shared/ui/aviso/aviso';
 import { Botao } from '../../../../shared/ui/botao/botao';
 import { Janela } from '../../../../shared/ui/janela/janela';
 import { Link } from '../../../../shared/ui/link/link';
 import { ForumApi } from '../../data-access/forum.api';
+import { TopicoCriado } from '../../data-access/forum.eventos';
 import { Ordenacao } from '../../data-access/forum.models';
 import { TopicosNovos } from '../../data-access/topicos-novos';
 import { JanelaCategorias } from '../../ui/janela-categorias';
@@ -75,4 +78,22 @@ export class Feed {
     () => valorDe(this.categorias) ?? [],
   );
   protected readonly erro = computed(() => mensagemDoErro(this.topicos));
+
+  constructor() {
+    // RF09 / RF15: qualquer mudanca no forum recarrega a lista. Recarregar (em vez
+    // de inserir na mao) respeita a categoria, a ordem EM ALTA e o contador RESP.
+    // O debounce junta rajadas (ex.: varias respostas seguidas) numa unica busca.
+    const tempoReal = inject(TempoReal);
+    merge(
+      tempoReal
+        .on<TopicoCriado>('topico_criado')
+        .pipe(tap(({ topico }) => this.novos.marcar(topico.id_topico))),
+      tempoReal.on('topico_atualizado'),
+      tempoReal.on('topico_excluido'),
+      tempoReal.on('resposta_criada'),
+      tempoReal.on('resposta_excluida'),
+    )
+      .pipe(debounceTime(200), takeUntilDestroyed())
+      .subscribe(() => this.topicos.reload());
+  }
 }
