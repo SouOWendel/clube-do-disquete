@@ -14,7 +14,8 @@ import { Logo } from '../../../../shared/ui/logo/logo';
     <ng-content />
   `,
   host: {
-    class: 'flex w-full flex-1 flex-col items-center justify-center gap-e6 px-e8 py-e6',
+    class:
+      'flex w-full flex-1 flex-col items-center justify-center gap-e6 px-e8 py-e6',
   },
 })
 export class TelaAuth {}

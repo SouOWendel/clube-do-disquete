@@ -1,7 +1,14 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import {
+  HttpTestingController,
+  provideHttpClientTesting,
+} from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter, Router, withComponentInputBinding } from '@angular/router';
+import {
+  provideRouter,
+  Router,
+  withComponentInputBinding,
+} from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { routes } from '../../app.routes';
 import { Notificacoes } from '../../core/notificacoes/notificacoes';
@@ -13,7 +20,11 @@ const API = 'http://localhost:8000/api';
 
 const CATEGORIAS: Categoria[] = [
   { id_categoria: 1, codigo: 'precos-e-promocoes', nome: 'Preços e promoções' },
-  { id_categoria: 4, codigo: 'conserto-e-diagnostico', nome: 'Conserto e diagnóstico' },
+  {
+    id_categoria: 4,
+    codigo: 'conserto-e-diagnostico',
+    nome: 'Conserto e diagnóstico',
+  },
 ];
 
 const TOPICO: Topico = {
@@ -34,7 +45,9 @@ describe('Forum', () => {
   beforeEach(() => {
     localStorage.clear();
     // O jsdom ainda nao implementa o <dialog> modal.
-    HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) {
+    HTMLDialogElement.prototype.showModal ??= function (
+      this: HTMLDialogElement,
+    ) {
       this.open = true;
     };
     HTMLDialogElement.prototype.close ??= function (this: HTMLDialogElement) {
@@ -78,11 +91,15 @@ describe('Forum', () => {
   it('lista os topicos da categoria com o token na requisicao', async () => {
     entrar();
     const harness = await RouterTestingHarness.create();
-    await harness.navigateByUrl('/categoria/conserto-e-diagnostico?ordenar=em-alta');
+    await harness.navigateByUrl(
+      '/categoria/conserto-e-diagnostico?ordenar=em-alta',
+    );
 
     http.expectOne(`${API}/categorias/`).flush(CATEGORIAS);
     const req = http.expectOne(
-      (r) => r.url === `${API}/topicos/` && r.params.get('categoria') === 'conserto-e-diagnostico',
+      (r) =>
+        r.url === `${API}/topicos/` &&
+        r.params.get('categoria') === 'conserto-e-diagnostico',
     );
     expect(req.request.params.get('ordenar')).toBe('em-alta');
     expect(req.request.headers.get('Authorization')).toBe('Bearer token-teste');
@@ -101,7 +118,9 @@ describe('Forum', () => {
 
     const semConexao = new ProgressEvent('error');
     http.expectOne(`${API}/categorias/`).error(semConexao, { status: 0 });
-    http.expectOne((r) => r.url === `${API}/topicos/`).error(semConexao, { status: 0 });
+    http
+      .expectOne((r) => r.url === `${API}/topicos/`)
+      .error(semConexao, { status: 0 });
     await harness.fixture.whenStable();
 
     const tela = harness.routeNativeElement!;
@@ -142,7 +161,10 @@ describe('Forum', () => {
     await harness.fixture.whenStable();
     tela.querySelector<HTMLButtonElement>('button[type="submit"]')!.click();
 
-    const req = http.expectOne({ url: `${API}/topicos/7/respostas/`, method: 'POST' });
+    const req = http.expectOne({
+      url: `${API}/topicos/7/respostas/`,
+      method: 'POST',
+    });
     expect(req.request.body).toEqual({ corpo: 'Testa sem periféricos USB.' });
     req.flush({
       id_resposta: 1,
@@ -168,8 +190,12 @@ describe('Forum', () => {
 
     const tela = harness.routeNativeElement!;
     expect(tela.textContent).toContain('EDITAR');
-    const botoes = () => [...tela.querySelectorAll<HTMLButtonElement>('button')];
-    botoes().find((b) => b.textContent?.includes('EXCLUIR'))!.click();
+    const botoes = () => [
+      ...tela.querySelectorAll<HTMLButtonElement>('button'),
+    ];
+    botoes()
+      .find((b) => b.textContent?.includes('EXCLUIR'))!
+      .click();
     await harness.fixture.whenStable();
 
     const dialogo = tela.querySelector('dialog')!;
@@ -184,7 +210,11 @@ describe('Forum', () => {
     http.expectOne(`${API}/categorias/`).flush(CATEGORIAS);
     http.expectOne((r) => r.url === `${API}/topicos/`).flush([]);
     await harness.fixture.whenStable();
-    expect(TestBed.inject(Notificacoes).lista().map((n) => n.mensagem)).toContain('Tópico excluído.');
+    expect(
+      TestBed.inject(Notificacoes)
+        .lista()
+        .map((n) => n.mensagem),
+    ).toContain('Tópico excluído.');
   });
 
   afterEach(() => http.match(() => true));

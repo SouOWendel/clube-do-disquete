@@ -4,15 +4,18 @@ export type EstiloBotao = 'primario' | 'secundario' | 'perigo';
 
 const ESTILOS: Record<EstiloBotao, { solto: string; pressionado: string }> = {
   primario: {
-    solto: 'bg-acao-primaria text-texto-inverso hover:bg-acao-primaria-hover active:bg-acao-primaria-hover',
+    solto:
+      'bg-acao-primaria text-texto-inverso hover:bg-acao-primaria-hover active:bg-acao-primaria-hover',
     pressionado: 'bg-acao-primaria-hover text-texto-inverso',
   },
   secundario: {
-    solto: 'bg-fundo-sutil text-texto-padrao hover:bg-fundo-superficie active:bg-fundo-superficie',
+    solto:
+      'bg-fundo-sutil text-texto-padrao hover:bg-fundo-superficie active:bg-fundo-superficie',
     pressionado: 'bg-fundo-superficie text-texto-padrao',
   },
   perigo: {
-    solto: 'bg-acao-perigo text-texto-inverso hover:bg-acao-perigo-hover active:bg-acao-perigo-hover',
+    solto:
+      'bg-acao-perigo text-texto-inverso hover:bg-acao-perigo-hover active:bg-acao-perigo-hover',
     pressionado: 'bg-acao-perigo-hover text-texto-inverso',
   },
 };

@@ -1,4 +1,10 @@
-import { Directive, WritableSignal, computed, input, signal } from '@angular/core';
+import {
+  Directive,
+  WritableSignal,
+  computed,
+  input,
+  signal,
+} from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
 let proximoId = 0;
@@ -38,7 +44,9 @@ export abstract class ControleDeFormulario<T> implements ControlValueAccessor {
   });
 
   protected readonly classesRotulo = computed(
-    () => 'texto-rotulo ' + (this.desabilitado() ? 'text-texto-desabilitado' : 'text-texto-padrao'),
+    () =>
+      'texto-rotulo ' +
+      (this.desabilitado() ? 'text-texto-desabilitado' : 'text-texto-padrao'),
   );
 
   protected aoMudar: (valor: T) => void = () => {};

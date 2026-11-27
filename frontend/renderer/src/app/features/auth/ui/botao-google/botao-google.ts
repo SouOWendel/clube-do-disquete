@@ -11,12 +11,26 @@ import { Botao } from '../../../../shared/ui/botao/botao';
   selector: 'app-botao-google',
   imports: [Aviso, Botao],
   template: `
-    <button appBotao estilo="secundario" type="button" class="w-full" (click)="avisar.set(true)">
-      <img src="assets/icones/google.png" alt="" width="16" height="16" class="size-4 object-contain" />
+    <button
+      appBotao
+      estilo="secundario"
+      type="button"
+      class="w-full"
+      (click)="avisar.set(true)"
+    >
+      <img
+        src="assets/icones/google.png"
+        alt=""
+        width="16"
+        height="16"
+        class="size-4 object-contain"
+      />
       Continuar com Google
     </button>
     @if (avisar()) {
-      <app-aviso tipo="info">O acesso com Google ainda não está disponível no app.</app-aviso>
+      <app-aviso tipo="info"
+        >O acesso com Google ainda não está disponível no app.</app-aviso
+      >
     }
   `,
   host: { class: 'flex w-full flex-col gap-e4' },

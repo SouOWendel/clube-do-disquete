@@ -16,11 +16,18 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const paraApi = req.url.startsWith(inject(API_URL));
 
   const requisicao =
-    token && paraApi ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : req;
+    token && paraApi
+      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+      : req;
 
   return next(requisicao).pipe(
     catchError((erro: unknown) => {
-      if (token && paraApi && erro instanceof HttpErrorResponse && erro.status === 401) {
+      if (
+        token &&
+        paraApi &&
+        erro instanceof HttpErrorResponse &&
+        erro.status === 401
+      ) {
         sessao.encerrar();
         router.navigateByUrl('/entrar');
       }

@@ -9,7 +9,8 @@ export const AUTH_ROUTES: Routes = [
   {
     path: 'cadastro',
     title: 'Criar conta · Clube do Disquete',
-    loadComponent: () => import('./pages/cadastro/cadastro').then((m) => m.Cadastro),
+    loadComponent: () =>
+      import('./pages/cadastro/cadastro').then((m) => m.Cadastro),
   },
   {
     path: 'esqueci-senha',

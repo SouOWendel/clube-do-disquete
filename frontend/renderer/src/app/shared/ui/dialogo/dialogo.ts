@@ -1,4 +1,11 @@
-import { Component, ElementRef, effect, input, output, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  effect,
+  input,
+  output,
+  viewChild,
+} from '@angular/core';
 import { Janela } from '../janela/janela';
 import { NomeIcone } from '../icone/icone';
 
@@ -19,7 +26,12 @@ import { NomeIcone } from '../icone/icone';
       (cancel)="$event.preventDefault(); fechar.emit()"
     >
       @if (aberto()) {
-        <app-janela [titulo]="titulo()" [icone]="icone()" controles="fechar" (fechar)="fechar.emit()">
+        <app-janela
+          [titulo]="titulo()"
+          [icone]="icone()"
+          controles="fechar"
+          (fechar)="fechar.emit()"
+        >
           <ng-content />
         </app-janela>
       }
@@ -34,7 +46,8 @@ export class Dialogo {
 
   readonly fechar = output<void>();
 
-  private readonly dialogo = viewChild.required<ElementRef<HTMLDialogElement>>('dialogo');
+  private readonly dialogo =
+    viewChild.required<ElementRef<HTMLDialogElement>>('dialogo');
 
   constructor() {
     effect(() => {

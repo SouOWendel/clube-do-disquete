@@ -24,17 +24,26 @@ import { Icone } from '../icone/icone';
           <app-icone nome="check" [tamanho]="14" class="text-texto-inverso" />
         }
       </span>
-      <span class="texto-corpo-pequeno" [class]="erro() ? 'text-texto-erro' : 'text-texto-padrao'">
+      <span
+        class="texto-corpo-pequeno"
+        [class]="erro() ? 'text-texto-erro' : 'text-texto-padrao'"
+      >
         <ng-content />
       </span>
     </label>
     @if (erro(); as mensagem) {
-      <span [id]="idAjuda" class="texto-corpo-pequeno text-texto-erro">{{ mensagem }}</span>
+      <span [id]="idAjuda" class="texto-corpo-pequeno text-texto-erro">{{
+        mensagem
+      }}</span>
     }
   `,
   host: { class: 'flex flex-col gap-e1' },
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => Checkbox), multi: true },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => Checkbox),
+      multi: true,
+    },
   ],
 })
 export class Checkbox extends ControleDeFormulario<boolean> {

@@ -10,12 +10,14 @@ export const routes: Routes = [
   {
     path: '',
     canActivate: [exigeLogin],
-    loadChildren: () => import('./features/forum/forum.routes').then((m) => m.FORUM_ROUTES),
+    loadChildren: () =>
+      import('./features/forum/forum.routes').then((m) => m.FORUM_ROUTES),
   },
   {
     path: '',
     canActivate: [exigeVisitante],
-    loadChildren: () => import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
+    loadChildren: () =>
+      import('./features/auth/auth.routes').then((m) => m.AUTH_ROUTES),
   },
   { path: '**', redirectTo: '' },
 ];

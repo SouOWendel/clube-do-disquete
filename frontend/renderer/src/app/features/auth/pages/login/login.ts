@@ -1,7 +1,15 @@
 import { Component, inject, signal } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { errosDeCampo, ErrosDeCampo, mensagemGeral } from '../../../../core/api/mensagem-de-erro';
+import {
+  errosDeCampo,
+  ErrosDeCampo,
+  mensagemGeral,
+} from '../../../../core/api/mensagem-de-erro';
 import { Aviso } from '../../../../shared/ui/aviso/aviso';
 import { Botao } from '../../../../shared/ui/botao/botao';
 import { Campo } from '../../../../shared/ui/campo/campo';
@@ -15,7 +23,18 @@ import { TelaAuth } from '../../ui/tela-auth/tela-auth';
 /** Tela "ENTRAR NO FORUM" (Figma > Home — revisao > Login). */
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, Aviso, Botao, BotaoGoogle, Campo, DivisorOu, Janela, Link, TelaAuth],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    Aviso,
+    Botao,
+    BotaoGoogle,
+    Campo,
+    DivisorOu,
+    Janela,
+    Link,
+    TelaAuth,
+  ],
   templateUrl: './login.html',
   host: { class: 'flex flex-1 flex-col' },
 })

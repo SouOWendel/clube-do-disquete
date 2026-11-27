@@ -1,9 +1,23 @@
 import { DatePipe } from '@angular/common';
-import { Component, computed, inject, input, numberAttribute, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  numberAttribute,
+  signal,
+} from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { errosDeCampo, mensagemGeral } from '../../../../core/api/mensagem-de-erro';
+import {
+  errosDeCampo,
+  mensagemGeral,
+} from '../../../../core/api/mensagem-de-erro';
 import { causaDoErro, valorDe } from '../../../../core/api/recurso';
 import { Notificacoes } from '../../../../core/notificacoes/notificacoes';
 import { AreaDeTexto } from '../../../../shared/ui/area-de-texto/area-de-texto';
@@ -69,8 +83,12 @@ export class PaginaTopico {
   ]);
 
   protected readonly categoria = computed(() => this.dados()?.categoria);
-  protected readonly icone = computed(() => iconeDaCategoria(this.categoria()?.codigo));
-  protected readonly nomeCategoria = computed(() => this.categoria()?.nome.toUpperCase() ?? '');
+  protected readonly icone = computed(() =>
+    iconeDaCategoria(this.categoria()?.codigo),
+  );
+  protected readonly nomeCategoria = computed(
+    () => this.categoria()?.nome.toUpperCase() ?? '',
+  );
 
   protected readonly erroAoCarregar = computed(() => {
     const causa = causaDoErro(this.topico);
@@ -82,7 +100,10 @@ export class PaginaTopico {
 
   // Responder
   protected readonly formResposta = inject(NonNullableFormBuilder).group({
-    corpo: ['', [Validators.required, Validators.maxLength(LIMITES.respostaMax)]],
+    corpo: [
+      '',
+      [Validators.required, Validators.maxLength(LIMITES.respostaMax)],
+    ],
   });
   protected readonly enviando = signal(false);
   protected readonly erroResposta = signal<string | null>(null);
@@ -105,7 +126,9 @@ export class PaginaTopico {
       },
       error: (erro: unknown) => {
         this.enviando.set(false);
-        this.erroResposta.set(errosDeCampo(erro)['corpo'] ?? mensagemGeral(erro));
+        this.erroResposta.set(
+          errosDeCampo(erro)['corpo'] ?? mensagemGeral(erro),
+        );
       },
     });
   }
@@ -117,11 +140,14 @@ export class PaginaTopico {
 
   protected readonly textoExclusao = computed(() => {
     const titulo = this.dados()?.titulo ?? '';
-    const curto = titulo.length > 32 ? `${titulo.slice(0, 32).trimEnd()}…` : titulo;
+    const curto =
+      titulo.length > 32 ? `${titulo.slice(0, 32).trimEnd()}…` : titulo;
     const total = this.respostas().length;
     const fim = 'Você voltará ao feed.';
-    if (total === 0) return `O tópico "${curto}" será excluído permanentemente. ${fim}`;
-    const respostas = total === 1 ? 'a resposta' : `todas as ${total} respostas`;
+    if (total === 0)
+      return `O tópico "${curto}" será excluído permanentemente. ${fim}`;
+    const respostas =
+      total === 1 ? 'a resposta' : `todas as ${total} respostas`;
     return `O tópico "${curto}" e ${respostas} serão excluídos permanentemente. ${fim}`;
   });
 

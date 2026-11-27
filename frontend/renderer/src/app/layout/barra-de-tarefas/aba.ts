@@ -38,7 +38,8 @@ import { Icone, NomeIcone } from '../../shared/ui/icone/icone';
     class:
       'flex w-[200px] shrink-0 items-center gap-e2 border-2 border-solid border-borda-padrao px-e3 py-e2 ' +
       'focus-within:border-dashed',
-    '[class]': "ativa() ? 'bg-fundo-superficie' : 'bg-fundo-sutil sombra-botao hover:bg-fundo-hover'",
+    '[class]':
+      "ativa() ? 'bg-fundo-superficie' : 'bg-fundo-sutil sombra-botao hover:bg-fundo-hover'",
   },
 })
 export class Aba {

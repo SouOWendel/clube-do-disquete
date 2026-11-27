@@ -15,7 +15,9 @@ import { TagCategoria } from './tag-categoria';
   template: `
     <a
       class="flex w-full items-center gap-e4 px-e4 py-e3 text-texto-padrao no-underline outline-none focus-visible:outline-1 focus-visible:outline-dashed focus-visible:-outline-offset-4"
-      [class]="novo() ? 'bg-fundo-destaque' : 'bg-fundo-superficie hover:bg-fundo-hover'"
+      [class]="
+        novo() ? 'bg-fundo-destaque' : 'bg-fundo-superficie hover:bg-fundo-hover'
+      "
       [routerLink]="['/topicos', topico().id_topico]"
     >
       <span
@@ -27,13 +29,20 @@ import { TagCategoria } from './tag-categoria';
         <span class="flex max-w-full items-center gap-e2">
           <span class="truncate texto-rotulo">{{ topico().titulo }}</span>
           @if (novo()) {
-            <span class="shrink-0 bg-acao-primaria px-e2 py-e1 texto-rotulo-pequeno text-texto-inverso">NOVO</span>
+            <span
+              class="shrink-0 bg-acao-primaria px-e2 py-e1 texto-rotulo-pequeno text-texto-inverso"
+              >NOVO</span
+            >
           }
         </span>
         <app-tag-categoria>{{ topico().categoria.nome }}</app-tag-categoria>
       </span>
-      <span class="w-16 shrink-0 text-center texto-rotulo">{{ topico().total_respostas }}</span>
-      <span class="w-18 shrink-0 text-center texto-corpo">{{ topico().criado_em | date: 'dd/MM' }}</span>
+      <span class="w-16 shrink-0 text-center texto-rotulo">{{
+        topico().total_respostas
+      }}</span>
+      <span class="w-18 shrink-0 text-center texto-corpo">{{
+        topico().criado_em | date: 'dd/MM'
+      }}</span>
     </a>
   `,
   host: { class: 'block border-b border-solid border-borda-sutil' },

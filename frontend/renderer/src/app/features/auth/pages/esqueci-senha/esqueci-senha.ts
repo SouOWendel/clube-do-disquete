@@ -1,7 +1,14 @@
 import { Component, inject, signal } from '@angular/core';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { errosDeCampo, mensagemGeral } from '../../../../core/api/mensagem-de-erro';
+import {
+  errosDeCampo,
+  mensagemGeral,
+} from '../../../../core/api/mensagem-de-erro';
 import { Aviso } from '../../../../shared/ui/aviso/aviso';
 import { Botao } from '../../../../shared/ui/botao/botao';
 import { Campo } from '../../../../shared/ui/campo/campo';
@@ -13,7 +20,16 @@ import { TelaAuth } from '../../ui/tela-auth/tela-auth';
 /** Tela "RECUPERAR A SENHA" (Figma > Home — revisao > Esqueci a senha). */
 @Component({
   selector: 'app-esqueci-senha',
-  imports: [ReactiveFormsModule, RouterLink, Aviso, Botao, Campo, Janela, Link, TelaAuth],
+  imports: [
+    ReactiveFormsModule,
+    RouterLink,
+    Aviso,
+    Botao,
+    Campo,
+    Janela,
+    Link,
+    TelaAuth,
+  ],
   templateUrl: './esqueci-senha.html',
   host: { class: 'flex flex-1 flex-col' },
 })
@@ -34,8 +50,11 @@ export class EsqueciSenha {
 
   protected erro(): string | null {
     if (this.erroServidor()) return this.erroServidor();
-    if (!(this.email.touched || this.enviado()) || this.email.valid) return null;
-    return this.email.hasError('required') ? 'Informe seu e-mail.' : 'Informe um e-mail válido.';
+    if (!(this.email.touched || this.enviado()) || this.email.valid)
+      return null;
+    return this.email.hasError('required')
+      ? 'Informe seu e-mail.'
+      : 'Informe um e-mail válido.';
   }
 
   protected enviarLink(): void {

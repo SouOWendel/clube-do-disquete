@@ -1,4 +1,12 @@
-import { Component, ElementRef, computed, forwardRef, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  computed,
+  forwardRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControleDeFormulario } from '../formulario/controle-de-formulario';
 import { MensagemDeAjuda } from '../formulario/mensagem-de-ajuda';
@@ -21,7 +29,13 @@ export interface OpcaoSeletor {
     class: 'flex w-full flex-col items-start gap-e2',
     '(document:click)': 'cliqueFora($event)',
   },
-  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => Seletor), multi: true }],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => Seletor),
+      multi: true,
+    },
+  ],
 })
 export class Seletor extends ControleDeFormulario<string> {
   readonly opcoes = input.required<readonly OpcaoSeletor[]>();
@@ -40,7 +54,8 @@ export class Seletor extends ControleDeFormulario<string> {
 
   protected alternar(): void {
     if (this.desabilitado()) return;
-    this.aberto() ? this.fechar() : this.abrir();
+    if (this.aberto()) this.fechar();
+    else this.abrir();
   }
 
   protected escolher(opcao: OpcaoSeletor): void {
@@ -62,7 +77,8 @@ export class Seletor extends ControleDeFormulario<string> {
       case 'Enter':
       case ' ':
         evento.preventDefault();
-        if (this.aberto() && this.ativa() >= 0) this.escolher(this.opcoes()[this.ativa()]);
+        if (this.aberto() && this.ativa() >= 0)
+          this.escolher(this.opcoes()[this.ativa()]);
         else this.abrir();
         break;
       case 'Escape':
@@ -72,7 +88,10 @@ export class Seletor extends ControleDeFormulario<string> {
   }
 
   protected cliqueFora(evento: Event): void {
-    if (this.aberto() && !this.elemento.nativeElement.contains(evento.target as Node)) {
+    if (
+      this.aberto() &&
+      !this.elemento.nativeElement.contains(evento.target as Node)
+    ) {
       this.fechar();
     }
   }
@@ -84,7 +103,12 @@ export class Seletor extends ControleDeFormulario<string> {
   private abrir(): void {
     this.aberto.set(true);
     this.focado.set(true);
-    this.ativa.set(Math.max(0, this.opcoes().findIndex((o) => o.valor === this.valor())));
+    this.ativa.set(
+      Math.max(
+        0,
+        this.opcoes().findIndex((o) => o.valor === this.valor()),
+      ),
+    );
   }
 
   private fechar(): void {

@@ -18,7 +18,8 @@ export type ControlesJanela = 'todos' | 'fechar' | 'nenhum';
   host: {
     role: 'region',
     '[attr.aria-label]': 'titulo()',
-    class: 'flex flex-col border-2 border-solid border-borda-padrao bg-fundo-superficie sombra-janela',
+    class:
+      'flex flex-col border-2 border-solid border-borda-padrao bg-fundo-superficie sombra-janela',
   },
 })
 export class Janela {

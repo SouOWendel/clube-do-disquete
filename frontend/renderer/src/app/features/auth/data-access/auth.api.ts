@@ -46,7 +46,9 @@ export class AuthApi {
   }
 
   recuperarSenha(email: string): Observable<RespostaDetalhe> {
-    return this.http.post<RespostaDetalhe>(`${this.url}/recuperar-senha/`, { email });
+    return this.http.post<RespostaDetalhe>(`${this.url}/recuperar-senha/`, {
+      email,
+    });
   }
 
   /** Avisa o backend e limpa a sessao local mesmo se a chamada falhar. */

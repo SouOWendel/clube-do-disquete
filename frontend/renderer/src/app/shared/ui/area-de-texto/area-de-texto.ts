@@ -33,11 +33,20 @@ const numero = new Intl.NumberFormat('pt-BR');
         (blur)="sair()"
       ></textarea>
     </div>
-    <app-mensagem-de-ajuda [id]="idAjuda" [erro]="erro()" [ajuda]="ajuda()" [contador]="contador()" />
+    <app-mensagem-de-ajuda
+      [id]="idAjuda"
+      [erro]="erro()"
+      [ajuda]="ajuda()"
+      [contador]="contador()"
+    />
   `,
   host: { class: 'flex w-full flex-col items-start gap-e2' },
   providers: [
-    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AreaDeTexto), multi: true },
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => AreaDeTexto),
+      multi: true,
+    },
   ],
 })
 export class AreaDeTexto extends ControleDeFormulario<string> {
@@ -49,7 +58,9 @@ export class AreaDeTexto extends ControleDeFormulario<string> {
   protected readonly contador = computed(() => {
     const total = numero.format(this.valor().length);
     const limite = this.limite();
-    return limite ? `${total} / ${numero.format(limite)}` : `${total} caracteres`;
+    return limite
+      ? `${total} / ${numero.format(limite)}`
+      : `${total} caracteres`;
   });
 
   protected valorVazio(): string {

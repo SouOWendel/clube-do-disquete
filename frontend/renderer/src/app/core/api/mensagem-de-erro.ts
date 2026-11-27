@@ -13,19 +13,30 @@ export function mensagemGeral(erro: unknown): string | null {
   if (erro.status === 0) {
     return 'Não foi possível conectar ao servidor. Verifique se o backend está rodando.';
   }
-  const corpo = typeof erro.error === 'object' ? (erro.error as Record<string, unknown> | null) : null;
-  const detalhe = primeiraMensagem(corpo?.['detail'] ?? corpo?.['non_field_errors']);
+  const corpo =
+    typeof erro.error === 'object'
+      ? (erro.error as Record<string, unknown> | null)
+      : null;
+  const detalhe = primeiraMensagem(
+    corpo?.['detail'] ?? corpo?.['non_field_errors'],
+  );
   if (detalhe) return detalhe;
   return Object.keys(errosDeCampo(erro)).length > 0 ? null : generica;
 }
 
 /** Mapeia os erros por campo do DRF para `{ campo: 'primeira mensagem' }`. */
 export function errosDeCampo(erro: unknown): ErrosDeCampo {
-  if (!(erro instanceof HttpErrorResponse) || typeof erro.error !== 'object' || !erro.error) {
+  if (
+    !(erro instanceof HttpErrorResponse) ||
+    typeof erro.error !== 'object' ||
+    !erro.error
+  ) {
     return {};
   }
   const resultado: ErrosDeCampo = {};
-  for (const [campo, valor] of Object.entries(erro.error as Record<string, unknown>)) {
+  for (const [campo, valor] of Object.entries(
+    erro.error as Record<string, unknown>,
+  )) {
     if (campo === 'detail' || campo === 'non_field_errors') continue;
     const mensagem = primeiraMensagem(valor);
     if (mensagem) resultado[campo] = mensagem;

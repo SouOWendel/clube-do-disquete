@@ -7,7 +7,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { errosDeCampo, ErrosDeCampo, mensagemGeral } from '../../../../core/api/mensagem-de-erro';
+import {
+  errosDeCampo,
+  ErrosDeCampo,
+  mensagemGeral,
+} from '../../../../core/api/mensagem-de-erro';
 import { Aviso } from '../../../../shared/ui/aviso/aviso';
 import { Botao } from '../../../../shared/ui/botao/botao';
 import { Campo } from '../../../../shared/ui/campo/campo';
@@ -19,17 +23,28 @@ import { AuthApi } from '../../data-access/auth.api';
 import { BotaoGoogle } from '../../ui/botao-google/botao-google';
 import { TelaAuth } from '../../ui/tela-auth/tela-auth';
 
-type CampoCadastro = 'email' | 'nome_usuario' | 'senha' | 'confirmacao_senha' | 'termos_aceitos';
+type CampoCadastro =
+  | 'email'
+  | 'nome_usuario'
+  | 'senha'
+  | 'confirmacao_senha'
+  | 'termos_aceitos';
 
 /** Mesmas regras do CadastroSerializer (backend/usuarios/serializers.py). */
 const MENSAGENS: Record<CampoCadastro, Record<string, string>> = {
-  email: { required: 'Informe seu e-mail.', email: 'Informe um e-mail válido.' },
+  email: {
+    required: 'Informe seu e-mail.',
+    email: 'Informe um e-mail válido.',
+  },
   nome_usuario: {
     required: 'Escolha um nome de usuário.',
     minlength: 'Use pelo menos 3 caracteres.',
     pattern: 'Use apenas letras, números, ponto, hífen ou sublinhado.',
   },
-  senha: { required: 'Crie uma senha.', minlength: 'A senha precisa de no mínimo 8 caracteres.' },
+  senha: {
+    required: 'Crie uma senha.',
+    minlength: 'A senha precisa de no mínimo 8 caracteres.',
+  },
   confirmacao_senha: {
     required: 'Repita a senha.',
     diferente: 'As senhas não são iguais.',
@@ -39,7 +54,8 @@ const MENSAGENS: Record<CampoCadastro, Record<string, string>> = {
 
 function senhasIguais(grupo: AbstractControl): ValidationErrors | null {
   const confirmacao = grupo.get('confirmacao_senha');
-  if (!confirmacao?.value || grupo.get('senha')?.value === confirmacao.value) return null;
+  if (!confirmacao?.value || grupo.get('senha')?.value === confirmacao.value)
+    return null;
   return { diferente: true };
 }
 
@@ -71,7 +87,11 @@ export class Cadastro {
       email: ['', [Validators.required, Validators.email]],
       nome_usuario: [
         '',
-        [Validators.required, Validators.minLength(3), Validators.pattern(/^[a-zA-Z0-9_.-]+$/)],
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(/^[a-zA-Z0-9_.-]+$/),
+        ],
       ],
       senha: ['', [Validators.required, Validators.minLength(8)]],
       confirmacao_senha: ['', Validators.required],
@@ -95,7 +115,9 @@ export class Cadastro {
       return MENSAGENS.confirmacao_senha['diferente'];
     }
     const chave = Object.keys(controle.errors ?? {})[0];
-    return chave ? (MENSAGENS[campo][chave] ?? MENSAGENS[campo]['required']) : null;
+    return chave
+      ? (MENSAGENS[campo][chave] ?? MENSAGENS[campo]['required'])
+      : null;
   }
 
   protected criarConta(): void {

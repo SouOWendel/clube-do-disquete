@@ -15,7 +15,11 @@ import { iconeDaCategoria } from './icone-da-categoria';
   template: `
     <app-janela titulo="CATEGORIAS" corpo="">
       <nav class="flex w-full flex-col" aria-label="Categorias">
-        <a [class]="classes(!selecionada())" routerLink="/" queryParamsHandling="merge">
+        <a
+          [class]="classes(!selecionada())"
+          routerLink="/"
+          queryParamsHandling="merge"
+        >
           <app-icone nome="grade" />
           TODAS
         </a>

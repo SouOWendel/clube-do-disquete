@@ -20,7 +20,9 @@ describe('App', () => {
     await fixture.whenStable();
     const el = fixture.nativeElement as HTMLElement;
 
-    const entrar = el.querySelector<HTMLAnchorElement>('app-barra-de-tarefas a[href$="/entrar"]');
+    const entrar = el.querySelector<HTMLAnchorElement>(
+      'app-barra-de-tarefas a[href$="/entrar"]',
+    );
     expect(entrar?.textContent?.trim()).toBe('ENTRAR');
   });
 
@@ -36,7 +38,9 @@ describe('App', () => {
     });
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
-    const barra = (fixture.nativeElement as HTMLElement).querySelector('app-barra-de-tarefas')!;
+    const barra = (fixture.nativeElement as HTMLElement).querySelector(
+      'app-barra-de-tarefas',
+    )!;
 
     expect(barra.textContent).toContain('pedro_old');
     expect(barra.textContent).toContain('SAIR');
@@ -46,7 +50,9 @@ describe('App', () => {
     const harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/');
     expect(TestBed.inject(Router).url).toBe('/entrar');
-    expect(harness.routeNativeElement?.textContent).toContain('ENTRAR NO FÓRUM');
+    expect(harness.routeNativeElement?.textContent).toContain(
+      'ENTRAR NO FÓRUM',
+    );
   });
 
   it('mostra os erros do formulario de login ao enviar vazio', async () => {

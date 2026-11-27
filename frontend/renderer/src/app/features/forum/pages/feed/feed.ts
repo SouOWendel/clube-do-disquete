@@ -19,7 +19,15 @@ import { LinhaDeTopico } from '../../ui/linha-de-topico';
  */
 @Component({
   selector: 'app-feed',
-  imports: [RouterLink, Aviso, Botao, Janela, JanelaCategorias, LinhaDeTopico, Link],
+  imports: [
+    RouterLink,
+    Aviso,
+    Botao,
+    Janela,
+    JanelaCategorias,
+    LinhaDeTopico,
+    Link,
+  ],
   templateUrl: './feed.html',
   host: { class: 'flex w-full flex-col gap-e6 p-e8' },
 })
@@ -36,7 +44,9 @@ export class Feed {
     this.ordenar() === 'em-alta' ? 'em-alta' : 'recentes',
   );
 
-  protected readonly categorias = rxResource({ stream: () => this.api.categorias() });
+  protected readonly categorias = rxResource({
+    stream: () => this.api.categorias(),
+  });
 
   protected readonly topicos = rxResource({
     params: () => ({ categoria: this.codigo() ?? null, ordem: this.ordem() }),
@@ -48,16 +58,21 @@ export class Feed {
   );
 
   protected readonly caminho = computed(
-    () => `C:\\FÓRUM\\${(this.categoriaAtual()?.nome ?? 'Todos').toUpperCase()}`,
+    () =>
+      `C:\\FÓRUM\\${(this.categoriaAtual()?.nome ?? 'Todos').toUpperCase()}`,
   );
 
   /** A busca da barra de tarefas filtra os titulos ja carregados. */
   protected readonly visiveis = computed(() => {
     const termo = this.busca()?.trim().toLocaleLowerCase('pt-BR');
     const lista = valorDe(this.topicos) ?? [];
-    return termo ? lista.filter((t) => t.titulo.toLocaleLowerCase('pt-BR').includes(termo)) : lista;
+    return termo
+      ? lista.filter((t) => t.titulo.toLocaleLowerCase('pt-BR').includes(termo))
+      : lista;
   });
 
-  protected readonly listaCategorias = computed(() => valorDe(this.categorias) ?? []);
+  protected readonly listaCategorias = computed(
+    () => valorDe(this.categorias) ?? [],
+  );
   protected readonly erro = computed(() => mensagemDoErro(this.topicos));
 }

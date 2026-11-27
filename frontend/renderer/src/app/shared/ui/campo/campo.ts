@@ -14,7 +14,13 @@ import { Icone, NomeIcone } from '../icone/icone';
   imports: [Icone, MensagemDeAjuda],
   templateUrl: './campo.html',
   host: { class: 'flex w-full flex-col items-start gap-e2' },
-  providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => Campo), multi: true }],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => Campo),
+      multi: true,
+    },
+  ],
 })
 export class Campo extends ControleDeFormulario<string> {
   readonly icone = input<NomeIcone>();

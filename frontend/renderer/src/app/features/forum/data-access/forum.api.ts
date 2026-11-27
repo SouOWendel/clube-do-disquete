@@ -26,8 +26,13 @@ export class ForumApi {
     return this.categorias$;
   }
 
-  topicos(categoria: string | null, ordenar: Ordenacao): Observable<TopicoResumo[]> {
-    const params = new HttpParams({ fromObject: { categoria: categoria ?? 'todas', ordenar } });
+  topicos(
+    categoria: string | null,
+    ordenar: Ordenacao,
+  ): Observable<TopicoResumo[]> {
+    const params = new HttpParams({
+      fromObject: { categoria: categoria ?? 'todas', ordenar },
+    });
     return this.http.get<TopicoResumo[]>(`${this.url}/topicos/`, { params });
   }
 
@@ -48,10 +53,15 @@ export class ForumApi {
   }
 
   respostas(idTopico: number): Observable<Resposta[]> {
-    return this.http.get<Resposta[]>(`${this.url}/topicos/${idTopico}/respostas/`);
+    return this.http.get<Resposta[]>(
+      `${this.url}/topicos/${idTopico}/respostas/`,
+    );
   }
 
   responder(idTopico: number, corpo: string): Observable<Resposta> {
-    return this.http.post<Resposta>(`${this.url}/topicos/${idTopico}/respostas/`, { corpo });
+    return this.http.post<Resposta>(
+      `${this.url}/topicos/${idTopico}/respostas/`,
+      { corpo },
+    );
   }
 }
